@@ -1,0 +1,61 @@
+vendor_id,vendor_name,category,location,min_price_per_plate,max_price_per_plate,min_price_per_event,max_price_per_event,pricing_type,rating,availability,event_type,review_count,is_synthetic
+VND-001,Synthetic Catering Vendor 001,Catering,Vashi,,,37051.0,89468.0,per_event,4.7,Unavailable,Birthday|Anniversary,422,True
+VND-002,Synthetic Photography Vendor 002,Photography,Vashi,,,29373.0,56879.0,per_event,3.3,Available,Wedding,343,True
+VND-003,Synthetic Decoration Vendor 003,Decoration,CBD Belapur,,,67318.0,67411.0,per_event,4.6,Available,Anniversary|Baby Shower|Corporate Event,255,True
+VND-004,Synthetic Event Planning Vendor 004,Event Planning,CBD Belapur,,,76874.0,78481.0,per_event,4.3,Available,Wedding,61,True
+VND-005,Synthetic Makeup Artist Vendor 005,Makeup Artist,Vashi,,,21811.0,23614.0,per_event,4.3,Available,Corporate Event,49,True
+VND-006,Synthetic Entertainment Vendor 006,Entertainment,Nerul,,,31486.0,46203.0,per_event,3.9,Available,Anniversary,20,True
+VND-007,Synthetic Catering Vendor 007,Catering,CBD Belapur,908.0,1496.0,,,per_plate,3.6,Available,Corporate Event|Wedding|Birthday,144,True
+VND-008,Synthetic Photography Vendor 008,Photography,Nerul,,,16314.0,40649.0,per_event,3.8,Unavailable,Anniversary|Baby Shower,164,True
+VND-009,Synthetic Decoration Vendor 009,Decoration,Nerul,,,25853.0,43954.0,per_event,4.4,Available,Birthday,49,True
+VND-010,Synthetic Event Planning Vendor 010,Event Planning,CBD Belapur,,,91705.0,96268.0,per_event,3.9,Available,Engagement|Birthday|Corporate Event,123,True
+VND-011,Synthetic Makeup Artist Vendor 011,Makeup Artist,Nerul,,,9633.0,20140.0,per_event,3.2,Unavailable,Anniversary|Engagement,48,True
+VND-012,Synthetic Entertainment Vendor 012,Entertainment,Nerul,,,23383.0,47567.0,per_event,4.9,Unavailable,Engagement|Anniversary,134,True
+VND-013,Synthetic Catering Vendor 013,Catering,CBD Belapur,1289.0,1384.0,80268.0,85640.0,both,4.8,Available,Birthday,354,True
+VND-014,Synthetic Photography Vendor 014,Photography,Vashi,,,20118.0,48898.0,per_event,3.4,Unavailable,Corporate Event,292,True
+VND-015,Synthetic Decoration Vendor 015,Decoration,Nerul,,,16269.0,64610.0,per_event,4.3,Available,Baby Shower|Anniversary,51,True
+VND-016,Synthetic Event Planning Vendor 016,Event Planning,Vashi,,,84984.0,107000.0,per_event,3.1,Available,Corporate Event,211,True
+VND-017,Synthetic Makeup Artist Vendor 017,Makeup Artist,Vashi,,,7140.0,13031.0,per_event,4.2,Available,Corporate Event|Birthday,153,True
+VND-018,Synthetic Entertainment Vendor 018,Entertainment,Nerul,,,46855.0,49968.0,per_event,3.0,Unavailable,Engagement|Baby Shower,298,True
+VND-019,Synthetic Catering Vendor 019,Catering,Vashi,,,61172.0,79309.0,per_event,4.9,Available,Birthday|Wedding|Corporate Event,248,True
+VND-020,Synthetic Photography Vendor 020,Photography,Vashi,,,37112.0,47949.0,per_event,3.9,Available,Wedding|Baby Shower|Corporate Event,185,True
+VND-021,Synthetic Decoration Vendor 021,Decoration,CBD Belapur,,,68708.0,68819.0,per_event,4.3,Available,Wedding|Engagement|Birthday,58,True
+VND-022,Synthetic Event Planning Vendor 022,Event Planning,CBD Belapur,,,44387.0,94248.0,per_event,4.8,Available,Corporate Event|Baby Shower|Engagement,122,True
+VND-023,Synthetic Makeup Artist Vendor 023,Makeup Artist,CBD Belapur,,,3823.0,6814.0,per_event,4.6,Available,Baby Shower|Engagement,416,True
+VND-024,Synthetic Entertainment Vendor 024,Entertainment,Vashi,,,16515.0,48423.0,per_event,3.5,Unavailable,Wedding|Anniversary,94,True
+VND-025,Synthetic Catering Vendor 025,Catering,Nerul,1033.0,1054.0,,,per_plate,5.0,Unavailable,Engagement,50,True
+VND-026,Synthetic Photography Vendor 026,Photography,CBD Belapur,,,47430.0,58060.0,per_event,4.5,Available,Baby Shower|Birthday|Corporate Event,161,True
+VND-027,Synthetic Decoration Vendor 027,Decoration,Nerul,,,41664.0,55988.0,per_event,4.9,Available,Corporate Event|Birthday|Anniversary,20,True
+VND-028,Synthetic Event Planning Vendor 028,Event Planning,Nerul,,,32275.0,38209.0,per_event,4.7,Available,Birthday|Corporate Event|Anniversary,302,True
+VND-029,Synthetic Makeup Artist Vendor 029,Makeup Artist,Vashi,,,9171.0,14083.0,per_event,3.3,Available,Anniversary|Baby Shower|Wedding,91,True
+VND-030,Synthetic Entertainment Vendor 030,Entertainment,CBD Belapur,,,17645.0,26681.0,per_event,3.2,Available,Birthday,341,True
+VND-031,Synthetic Catering Vendor 031,Catering,Nerul,1194.0,1429.0,68583.0,81685.0,both,4.4,Available,Baby Shower,403,True
+VND-032,Synthetic Photography Vendor 032,Photography,CBD Belapur,,,51297.0,52437.0,per_event,3.8,Available,Birthday|Anniversary,70,True
+VND-033,Synthetic Decoration Vendor 033,Decoration,Vashi,,,46757.0,63657.0,per_event,4.8,Available,Wedding|Baby Shower,147,True
+VND-034,Synthetic Event Planning Vendor 034,Event Planning,CBD Belapur,,,79693.0,102071.0,per_event,3.2,Available,Anniversary,376,True
+VND-035,Synthetic Makeup Artist Vendor 035,Makeup Artist,Vashi,,,12220.0,12303.0,per_event,3.9,Unavailable,Birthday|Engagement|Wedding,403,True
+VND-036,Synthetic Entertainment Vendor 036,Entertainment,CBD Belapur,,,43573.0,43687.0,per_event,4.6,Available,Birthday|Wedding,170,True
+VND-037,Synthetic Catering Vendor 037,Catering,Vashi,,,82386.0,93060.0,per_event,3.7,Available,Corporate Event|Baby Shower|Anniversary,61,True
+VND-038,Synthetic Photography Vendor 038,Photography,Vashi,,,42596.0,59350.0,per_event,4.5,Unavailable,Engagement|Anniversary|Wedding,122,True
+VND-039,Synthetic Decoration Vendor 039,Decoration,Nerul,,,77344.0,77623.0,per_event,4.6,Available,Anniversary|Birthday|Engagement,462,True
+VND-040,Synthetic Event Planning Vendor 040,Event Planning,CBD Belapur,,,34387.0,112746.0,per_event,3.2,Available,Baby Shower|Birthday|Engagement,81,True
+VND-041,Synthetic Makeup Artist Vendor 041,Makeup Artist,Nerul,,,18598.0,18952.0,per_event,3.1,Available,Wedding,260,True
+VND-042,Synthetic Entertainment Vendor 042,Entertainment,Nerul,,,36590.0,47360.0,per_event,4.8,Unavailable,Corporate Event|Wedding,255,True
+VND-043,Synthetic Catering Vendor 043,Catering,CBD Belapur,,,28260.0,63634.0,per_event,3.5,Available,Baby Shower,122,True
+VND-044,Synthetic Photography Vendor 044,Photography,Nerul,,,57442.0,58507.0,per_event,3.7,Available,Birthday,448,True
+VND-045,Synthetic Decoration Vendor 045,Decoration,Vashi,,,21608.0,27057.0,per_event,4.7,Unavailable,Birthday|Corporate Event|Engagement,54,True
+VND-046,Synthetic Event Planning Vendor 046,Event Planning,Vashi,,,43987.0,118448.0,per_event,4.6,Available,Corporate Event,310,True
+VND-047,Synthetic Makeup Artist Vendor 047,Makeup Artist,Nerul,,,20137.0,23731.0,per_event,4.0,Unavailable,Corporate Event,270,True
+VND-048,Synthetic Entertainment Vendor 048,Entertainment,CBD Belapur,,,43015.0,46248.0,per_event,3.3,Available,Anniversary|Baby Shower|Wedding,86,True
+VND-049,Synthetic Catering Vendor 049,Catering,Nerul,,,70313.0,77217.0,per_event,3.7,Available,Anniversary|Wedding,95,True
+VND-050,Synthetic Photography Vendor 050,Photography,CBD Belapur,,,44287.0,47986.0,per_event,4.8,Available,Corporate Event,475,True
+VND-051,Synthetic Decoration Vendor 051,Decoration,CBD Belapur,,,65068.0,69971.0,per_event,4.3,Unavailable,Engagement|Baby Shower,279,True
+VND-052,Synthetic Event Planning Vendor 052,Event Planning,Vashi,,,73272.0,109079.0,per_event,3.4,Available,Wedding|Birthday,369,True
+VND-053,Synthetic Makeup Artist Vendor 053,Makeup Artist,Nerul,,,14072.0,23478.0,per_event,4.5,Available,Anniversary|Birthday|Corporate Event,264,True
+VND-054,Synthetic Entertainment Vendor 054,Entertainment,Vashi,,,47309.0,49256.0,per_event,4.6,Available,Baby Shower,480,True
+VND-055,Synthetic Catering Vendor 055,Catering,Nerul,,,83696.0,99946.0,per_event,3.2,Available,Birthday|Corporate Event|Anniversary,297,True
+VND-056,Synthetic Photography Vendor 056,Photography,CBD Belapur,,,18385.0,25513.0,per_event,4.1,Available,Anniversary,341,True
+VND-057,Synthetic Decoration Vendor 057,Decoration,CBD Belapur,,,48971.0,71553.0,per_event,4.9,Available,Baby Shower|Anniversary|Corporate Event,302,True
+VND-058,Synthetic Event Planning Vendor 058,Event Planning,Vashi,,,98595.0,101101.0,per_event,4.5,Available,Engagement|Birthday|Anniversary,367,True
+VND-059,Synthetic Makeup Artist Vendor 059,Makeup Artist,Vashi,,,10340.0,21163.0,per_event,3.6,Available,Baby Shower|Corporate Event|Anniversary,185,True
+VND-060,Synthetic Entertainment Vendor 060,Entertainment,Nerul,,,48374.0,48614.0,per_event,3.9,Available,Baby Shower,68,True
