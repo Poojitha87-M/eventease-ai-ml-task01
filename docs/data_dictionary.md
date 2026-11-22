@@ -231,3 +231,24 @@ The 60-record Vendor Master dataset contains artificially generated sample data 
 Vendor names, ratings, prices, review counts, and availability are illustrative and are not verified real-world information.
 
 Venue and event-type leads are separate public business research records. Their information and services require independent verification before being treated as confirmed.
+
+## Additional Vendor Dataset Fields
+
+The cleaned vendor dataset contains four additional fields:
+
+| Column | Data Type | Description | Validation Rules |
+|---|---|---|---|
+| subcategory | String | Vendor's specific service type | Must belong to the corresponding main category |
+| description | String | Sample description of the vendor service | Clearly identified as synthetic sample content |
+| services_offered | String | Sample service associated with the subcategory | Clearly identified as synthetic sample content |
+| contact_information | String | Public vendor contact information | Keep NULL when verified information is unavailable |
+
+## Data Authenticity Note
+
+The 60 vendor records are synthetic sample data created for the EventEase prototype.
+
+Subcategories, descriptions and services offered in these records are also sample values. They must not be treated as verified business information.
+
+Contact information is currently NULL because verified public contact details are not available for these synthetic records.
+
+Real venue and event-planner leads are maintained separately with Pending verification status.

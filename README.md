@@ -402,3 +402,25 @@ Data collection, cleaning, validation, category analysis, event coverage analysi
 The prepared datasets provide a foundation for future vendor discovery and AI-powered recommendation development.
 
 **Data integrity note:** Synthetic records, potential business leads and verified business information are maintained as distinct data types. Pending records must not be presented as verified vendors.
+
+## Dataset Structure and Authenticity
+
+The cleaned vendor dataset contains 60 synthetic sample records and 18 columns.
+
+It includes vendor identification, category, subcategory, event type, location, pricing, rating, availability, description, services offered and contact information.
+
+### Data Authenticity
+
+- All 60 vendor records are synthetic.
+- Ratings and review counts are sample values, not verified customer reviews.
+- Descriptions and services are sample content.
+- Contact information is NULL because verified contact details are unavailable.
+- Real venue and event-planner leads are stored separately and remain pending verification.
+
+### Data Preparation
+
+The dataset was cleaned and validated using Python and Pandas. Duplicate IDs were checked, categorical values were organized, and the required dataset fields were added.
+
+### Recommendation Prototype
+
+A rule-based recommendation prototype was developed using budget, location, rating and event relevance. It is not a trained machine learning model.
