@@ -3,10 +3,15 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
+# ==========================================
+# 1. INITIALIZE RANDOM GENERATOR
+# ==========================================
+
 rng = np.random.default_rng(42)
 
+
 # ==========================================
-# 1. DEFINE CATEGORIES AND LOCATIONS
+# 2. DEFINE VENDOR CATEGORIES
 # ==========================================
 
 categories = [
@@ -14,24 +19,40 @@ categories = [
     "Photography",
     "Decoration",
     "Event Planning",
-    "Makeup Artist",
+    "Makeup",
     "Entertainment"
-]
-
-locations = ["CBD Belapur", "Vashi", "Nerul"]
-
-event_types = [
-    "Birthday",
-    "Wedding",
-    "Engagement",
-    "Anniversary",
-    "Corporate Event",
-    "Baby Shower"
 ]
 
 
 # ==========================================
-# 2. DEFINE SYNTHETIC PRICE RANGES
+# 3. DEFINE PILOT LOCATIONS
+# ==========================================
+
+locations = [
+    "CBD Belapur",
+    "Vashi",
+    "Nerul"
+]
+
+
+# ==========================================
+# 4. DEFINE ALL 8 REQUIRED EVENT TYPES
+# ==========================================
+
+event_types = [
+    "Wedding",
+    "Birthday",
+    "Corporate Event",
+    "Engagement",
+    "Baby Shower",
+    "College Event",
+    "Private Party",
+    "Festival"
+]
+
+
+# ==========================================
+# 5. DEFINE SYNTHETIC PRICE RANGES
 # ==========================================
 
 category_prices = {
@@ -39,50 +60,54 @@ category_prices = {
     "Photography": (None, None, 10000, 60000),
     "Decoration": (None, None, 15000, 80000),
     "Event Planning": (None, None, 20000, 120000),
-    "Makeup Artist": (None, None, 3000, 25000),
+    "Makeup": (None, None, 3000, 25000),
     "Entertainment": (None, None, 8000, 50000)
 }
 
 
 # ==========================================
-# 3. PREPARE VENDOR LOCATIONS
+# 6. PREPARE VENDOR LOCATIONS
 # ==========================================
 
-# Each category has 10 vendors.
-# Distribute them across all 3 locations.
+# Each location receives 20 vendors.
+vendor_locations = np.tile(locations, 20)
 
-vendor_locations = np.tile(
-    locations,
-    20
-)
-
-# Shuffle locations so categories are not grouped
-# by a fixed location pattern.
+# Shuffle locations randomly.
 rng.shuffle(vendor_locations)
 
 
 # ==========================================
-# 4. GENERATE 60 SYNTHETIC VENDORS
+# 7. GENERATE 60 SYNTHETIC VENDORS
 # ==========================================
 
 records = []
 
 for i in range(60):
 
+    # Select vendor category.
     category = categories[i % len(categories)]
+
+    # Select location.
     location = vendor_locations[i]
 
+    # Generate vendor ID.
     vendor_id = f"VND-{i + 1:03d}"
+
+    # Generate clearly labelled synthetic vendor name.
     vendor_name = f"Synthetic {category} Vendor {i + 1:03d}"
 
-    p_min, p_max, e_min, e_max = category_prices[category]
+    # Get category price ranges.
+    plate_min_range, plate_max_range, event_min_range, event_max_range = (
+        category_prices[category]
+    )
 
-    plate_min = None
-    plate_max = None
-    event_min = None
-    event_max = None
+    # Initialize pricing fields as blank.
+    min_price_per_plate = None
+    max_price_per_plate = None
+    min_price_per_event = None
+    max_price_per_event = None
 
-    # Catering supports all three pricing models.
+    # Catering can use different pricing models.
     if category == "Catering":
         pricing_type = rng.choice(
             ["per_plate", "per_event", "both"]
@@ -90,84 +115,155 @@ for i in range(60):
     else:
         pricing_type = "per_event"
 
-    # Generate per-plate prices where applicable.
+    # Generate per-plate prices only when applicable.
     if pricing_type in ["per_plate", "both"]:
 
-        plate_min = int(rng.integers(p_min, p_max))
-        plate_max = int(rng.integers(plate_min, p_max + 1))
+        min_price_per_plate = int(
+            rng.integers(plate_min_range, plate_max_range)
+        )
 
-    # Generate per-event prices where applicable.
+        max_price_per_plate = int(
+            rng.integers(min_price_per_plate, plate_max_range + 1)
+        )
+
+    # Generate per-event prices only when applicable.
     if pricing_type in ["per_event", "both"]:
 
-        event_min = int(rng.integers(e_min, e_max))
-        event_max = int(rng.integers(event_min, e_max + 1))
+        min_price_per_event = int(
+            rng.integers(event_min_range, event_max_range)
+        )
 
-    selected_events = rng.choice(
-        event_types,
-        size=int(rng.integers(1, 4)),
-        replace=False
-    )
+        max_price_per_event = int(
+            rng.integers(min_price_per_event, event_max_range + 1)
+        )
 
+    # Guarantee coverage of all 8 event types.
+    # Each vendor gets one primary event type.
+    primary_event = event_types[i % len(event_types)]
+
+    # Add zero, one, or two additional event types.
+    other_events = [
+        event for event in event_types
+        if event != primary_event
+    ]
+
+    extra_count = int(rng.integers(0, 3))
+
+    if extra_count > 0:
+        additional_events = rng.choice(
+            other_events,
+            size=extra_count,
+            replace=False
+        ).tolist()
+    else:
+        additional_events = []
+
+    selected_events = [primary_event] + additional_events
+
+    # Create vendor record.
     records.append({
+
         "vendor_id": vendor_id,
+
         "vendor_name": vendor_name,
+
         "category": category,
+
         "location": location,
-        "min_price_per_plate": plate_min,
-        "max_price_per_plate": plate_max,
-        "min_price_per_event": event_min,
-        "max_price_per_event": event_max,
+
+        "min_price_per_plate": min_price_per_plate,
+
+        "max_price_per_plate": max_price_per_plate,
+
+        "min_price_per_event": min_price_per_event,
+
+        "max_price_per_event": max_price_per_event,
+
         "pricing_type": pricing_type,
-        "rating": round(float(rng.uniform(3.0, 5.0)), 1),
+
+        "rating": round(
+            float(rng.uniform(3.0, 5.0)), 1
+        ),
+
         "availability": rng.choice(
             ["Available", "Unavailable"],
             p=[0.75, 0.25]
         ),
+
         "event_type": "|".join(selected_events),
-        "review_count": int(rng.integers(5, 501)),
+
+        "review_count": int(
+            rng.integers(5, 501)
+        ),
+
         "is_synthetic": True
     })
 
 
 # ==========================================
-# 5. CREATE DATAFRAME
+# 8. CREATE DATAFRAME
 # ==========================================
 
 df = pd.DataFrame(records)
 
 
 # ==========================================
-# 6. SAVE RAW DATASET
+# 9. SAVE DATASET
 # ==========================================
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
-output_path = PROJECT_ROOT / "data" / "raw" / "vendors.csv"
+output_path = (
+    PROJECT_ROOT / "data" / "raw" / "vendors.csv"
+)
 
-output_path.parent.mkdir(parents=True, exist_ok=True)
+output_path.parent.mkdir(
+    parents=True,
+    exist_ok=True
+)
 
-df.to_csv(output_path, index=False)
+df.to_csv(
+    output_path,
+    index=False
+)
 
 
 # ==========================================
-# 7. DISPLAY DATASET SUMMARY
+# 10. DISPLAY DATASET SUMMARY
 # ==========================================
 
-print("Dataset generated successfully!")
+print("\nSynthetic vendor dataset generated successfully!")
 
-print("Total records:", len(df))
-print("Total columns:", len(df.columns))
+print("\nDataset shape:")
+print(df.shape)
 
-print("\nCategory counts:")
+print("\nVendor categories:")
 print(df["category"].value_counts())
 
-print("\nLocation counts:")
+print("\nLocation distribution:")
 print(df["location"].value_counts())
 
-print("\nCategory-wise location distribution:")
-print(pd.crosstab(df["category"], df["location"]))
-
-print("\nPricing type counts:")
+print("\nPricing types:")
 print(df["pricing_type"].value_counts())
 
-print("\nAll records are synthetic:", df["is_synthetic"].all())
+print("\nEvent type coverage:")
+
+found_events = set()
+
+for events in df["event_type"]:
+    found_events.update(events.split("|"))
+
+for event in event_types:
+    count = df["event_type"].apply(
+        lambda value: event in value.split("|")
+    ).sum()
+
+    print(f"{event}: {count} vendors")
+
+print("\nTotal required event types:", len(found_events))
+
+print("\nAll records synthetic:")
+print(df["is_synthetic"].all())
+
+print("\nSaved file:")
+print(output_path)

@@ -1,0 +1,9 @@
+event_type,sample_vendor_count,potential_lead_count,sample_coverage,lead_status
+Wedding,19,8,Available,Potential Leads Found
+Birthday,18,6,Available,Potential Leads Found
+Corporate Event,15,5,Available,Potential Leads Found
+Engagement,17,3,Available,Potential Leads Found
+Baby Shower,13,1,Available,Potential Leads Found
+College Event,13,3,Available,Potential Leads Found
+Private Party,20,6,Available,Potential Leads Found
+Festival,11,2,Available,Potential Leads Found

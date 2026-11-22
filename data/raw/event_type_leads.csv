@@ -1,0 +1,5 @@
+vendor_id,vendor_name,category,location,phone,candidate_event_types,event_type,source_type,verification_status,is_synthetic
+ETL001,Kreative Keeda Entertainment,Entertainment,Nerul,+91 77689 41772,College Event|Festival|Cultural Event|Concert,,Public Business Listing,Pending,False
+ETL002,A.L.S. Events,Event Planning,Vashi,+91 99308 77368,College Event|Festival|Corporate Event|Private Party|Wedding,,Public Business Listing,Pending,False
+ETL003,Blink Events Vashi,Event Planning,Vashi,+91 98338 65567,College Event|Private Party|Birthday|Farewell,,Public Business Listing,Pending,False
+ETL004,SDS Event Planner,Event Planning,Vashi,+91 98198 71522,Private Party|Birthday|Family Celebration,,Public Business Listing,Pending,False
