@@ -10,21 +10,23 @@ The prepared datasets will support the future development of an AI-powered event
 
 ## 2. Project Scope
 
-**Primary Pilot Location:**
-- CBD Belapur, Navi Mumbai
+**Synthetic vendor dataset locations:**
+- Mumbai
+- Bangalore
+- Pune
+- Thane
 
-**Secondary Locations:**
-- Vashi
-- Nerul
+**Venue lead locations:**
+- Legacy leads: CBD Belapur, Vashi and Nerul
+- New leads: Mumbai, Pune, Bangalore and Thane
 
-The location values are maintained separately to support location-based vendor filtering.
+Location values are maintained separately to support location-based vendor filtering.
 
 ## 3. Datasets Created
 
 ### A. Event Categories
 
 Contains eight required event types:
-
 - Wedding
 - Birthday
 - Corporate Event
@@ -34,10 +36,11 @@ Contains eight required event types:
 - Private Party
 - Festival
 
+File: `data/reference/event_categories.csv`
+
 ### B. Vendor Categories
 
 Contains seven main vendor categories:
-
 - Decoration
 - Photography
 - Catering
@@ -46,48 +49,75 @@ Contains seven main vendor categories:
 - Makeup
 - Event Planning
 
-Each category is organized with its corresponding subcategories.
+Each category is organized with corresponding subcategories.
+
+File: `data/reference/vendor_categories.csv`
 
 ### C. Decoration Subcategories
 
 Contains four decoration service types:
-
 - Stage
 - Balloon
 - Floral
 - Theme Decoration
 
-### D. Vendor Master Dataset
+File: `data/reference/decoration_subcategories.csv`
 
-Contains 60 synthetic sample vendor records across six vendor categories and three pilot locations.
+### D. Synthetic Vendor Master Dataset
 
-The dataset includes:
+Contains 60 synthetic sample vendor records across six vendor categories and four locations.
 
-- Vendor ID
-- Vendor Name
-- Category
-- Subcategory
-- Event Type
-- Location
-- Pricing Information
-- Description
-- Services Offered
-- Rating
-- Availability
-- Contact Information
-- Synthetic Data Indicator
+Current location distribution:
+- Mumbai: 15
+- Bangalore: 15
+- Pune: 15
+- Thane: 15
 
-All 60 records are marked as synthetic. They are sample records and must not be treated as verified real businesses.
+The dataset includes vendor identification, category, subcategory, event type, location, pricing, description, services offered, rating, availability and contact information.
+
+All 60 records are marked as synthetic. Ratings, review counts, descriptions and services are sample data, not independently verified business information.
+
+Main output: `data/clean/vendors_clean.csv`
 
 ### E. Venue Leads
 
-Contains seven potential venue/business leads across CBD Belapur, Vashi and Nerul.
+Venue leads are maintained separately from synthetic vendor records.
 
-- All seven records have Pending verification status.
-- Some contact and address information is missing.
-- Available information requires independent verification.
+**Legacy venue leads:**
+- 7 potential leads
+- Locations: CBD Belapur, Vashi and Nerul
+- File: `data/raw/venue_leads_legacy.csv`
 
-### F. Event-Type Leads
+**New venue leads:**
+- 11 potential leads
+- Locations: Mumbai, Pune, Bangalore and Thane
+- File: `data/raw/venue_leads_new.csv`
+
+**Combined venue leads:**
+- 18 total records
+- 16 columns
+- Zero duplicate vendor IDs
+- All records marked non-synthetic
+- All records have Pending verification status
+
+File: `data/clean/all_venue_leads.csv`
+
+### F. Venue Verification Report
+
+Tracks source-review progress for the 11 new venue leads.
+
+| Source review status | Count |
+|---|---:|
+| Source details matched | 1 |
+| Partially checked | 2 |
+| Address discrepancy | 1 |
+| Not reviewed | 7 |
+
+All 11 leads remain Pending verification. Source review does not mean that the businesses have been fully verified.
+
+File: `data/clean/venue_verification_report.csv`
+
+### G. Event-Type Leads
 
 Contains four additional potential business leads for event coverage research.
 
@@ -97,46 +127,44 @@ Contains four additional potential business leads for event coverage research.
 
 ## 4. Data Cleaning
 
-Performed the following operations using Python and Pandas:
+Data cleaning was performed using Python and Pandas.
 
-- Removed duplicate rows.
-- Checked duplicate vendor IDs.
-- Removed unnecessary whitespace.
-- Standardized vendor category names.
-- Standardized pricing type values.
-- Checked missing values.
-- Saved the cleaned vendor dataset.
+Operations included:
+- Removing duplicate rows.
+- Checking duplicate vendor IDs.
+- Removing unnecessary whitespace.
+- Standardizing vendor category names.
+- Standardizing pricing type values.
+- Checking missing values.
+- Preparing the cleaned vendor dataset.
 
-**Output:**
-
-`data/clean/vendors_clean.csv`
-
-Latest cleaned vendor dataset:
+Latest synthetic vendor dataset:
 - 60 records
-- 14 columns
+- 18 columns
 - Zero duplicate rows
 - Zero duplicate vendor IDs
+
+Output: `data/clean/vendors_clean.csv`
 
 ## 5. Data Validation
 
 Validation checks included:
-
 - Dataset dimensions.
-- Duplicate records.
-- Duplicate vendor IDs.
+- Duplicate records and vendor IDs.
 - Missing values.
-- Vendor locations.
-- Vendor categories.
+- Vendor locations and categories.
 - Verification status.
 - Synthetic data identification.
 - Venue lead validation.
 - Event-type lead validation.
 
-The synthetic vendor dataset contains six categories. Venues are maintained separately in the venue leads dataset.
+The synthetic vendor dataset contains six categories. Real-world venue leads are maintained separately.
+
+The combined venue dataset contains 18 records, with no duplicate IDs and no missing required fields.
 
 ## 6. Event Coverage Analysis
 
-Analyzed coverage for all eight required event types using the latest cleaned synthetic vendor dataset.
+Analyzed coverage for all eight required event types using the synthetic vendor dataset.
 
 | Event Type | Sample Vendor Count |
 |---|---:|
@@ -151,18 +179,13 @@ Analyzed coverage for all eight required event types using the latest cleaned sy
 
 All eight required event types are represented in the synthetic sample dataset.
 
-The final coverage report also includes potential leads from the separate venue leads and event-type leads datasets.
+Potential leads from the separate venue and event-type lead datasets are maintained separately from synthetic vendor counts.
 
-Potential leads are not treated as verified vendors or confirmed services. Sample vendor counts and potential lead counts are maintained separately.
-
-**Output:**
-
-`data/clean/final_event_coverage_report.csv`
+Output: `data/clean/final_event_coverage_report.csv`
 
 ## 7. Pricing Data Handling
 
 Pricing information is maintained using separate fields:
-
 - `min_price_per_plate`
 - `max_price_per_plate`
 - `min_price_per_event`
@@ -170,21 +193,17 @@ Pricing information is maintained using separate fields:
 - `pricing_type`
 
 Pricing types include:
-
 - `per_plate`
 - `per_event`
 - `both`
 
-Irrelevant pricing fields are left blank (NULL) instead of converting one pricing model into another.
-
-No assumptions are made to infer per-plate pricing from per-event pricing or vice versa.
+Irrelevant pricing fields are left blank (NULL). Per-plate pricing is not inferred from per-event pricing or vice versa.
 
 ## 8. Recommendation Prototype
 
 A basic rule-based vendor recommendation prototype was developed and tested using the cleaned synthetic vendor dataset.
 
 The prototype evaluates:
-
 - Vendor category.
 - Availability.
 - Budget compatibility.
@@ -192,7 +211,7 @@ The prototype evaluates:
 - Rating.
 - Event relevance.
 
-**Scoring weights:**
+Scoring weights:
 
 | Factor | Weight |
 |---|---:|
@@ -205,14 +224,14 @@ Five test scenarios were processed, including an unavailable-vendor test using a
 
 The prototype is rule-based and does not use a trained Machine Learning model.
 
-**Test documentation:**
-
-`docs/test_results.md`
+Test documentation: `docs/test_results.md`
 
 ## 9. Current Limitations
 
 - The 60 vendor records are synthetic sample data.
-- The seven venue leads and four event-type leads are pending verification.
+- Venue leads and event-type leads are potential business leads, not confirmed vendors.
+- All 18 combined venue leads currently have Pending verification status.
+- The 11 new venue leads have a separate source-review report.
 - Candidate event types are not confirmed services.
 - Real business contact details, availability, ratings and services require verification.
 - Location scoring is a prototype assumption and does not calculate actual geographical distance.
@@ -227,6 +246,7 @@ The prototype is rule-based and does not use a trained Machine Learning model.
 - Excel
 - CSV
 - VS Code
+- Git and GitHub
 
 ## 11. Project Folder Structure
 
@@ -235,16 +255,17 @@ eventease-ai-ml-task01/
 │
 ├── data/
 │   ├── raw/
-│   │   ├── event_type_leads.csv
 │   │   ├── vendors.csv
-│   │   ├── venue_leads.csv
-│   │   └── venue_verification_tracker.csv
+│   │   ├── venue_leads_legacy.csv
+│   │   ├── venue_leads_new.csv
+│   │   └── event_type_leads.csv
 │   │
 │   ├── clean/
-│   │   ├── event_coverage_report.csv
-│   │   ├── final_event_coverage_report.csv
 │   │   ├── vendors_clean.csv
-│   │   └── venue_verification_report.csv
+│   │   ├── all_venue_leads.csv
+│   │   ├── venue_verification_report.csv
+│   │   ├── event_coverage_report.csv
+│   │   └── final_event_coverage_report.csv
 │   │
 │   └── reference/
 │       ├── decoration_subcategories.csv
@@ -259,53 +280,35 @@ eventease-ai-ml-task01/
 │   └── data_cleaning.ipynb
 │
 ├── src/
-│   ├── category_analysis.py
 │   ├── create_category_datasets.py
-│   ├── create_event_type_leads.py
-│   ├── create_venue_leads.py
-│   ├── data_cleaning.py
-│   ├── event_coverage_analysis.py
-│   ├── final_event_coverage_analysis.py
 │   ├── generate_data.py
-│   ├── prepare_verification_tracker.py
-│   ├── recommendation.py
+│   ├── data_cleaning.py
+│   ├── complete_vendor_schema.py
+│   ├── create_venue_leads.py
+│   ├── create_new_venue_leads.py
+│   ├── combine_venue_leads.py
+│   ├── create_venue_verification_report.py
+│   ├── create_event_type_leads.py
 │   ├── update_venue_sources.py
 │   ├── validate_data.py
-│   ├── validate_event_type_leads.py
 │   ├── validate_venue_leads.py
-│   └── venue_verification_report.py
+│   ├── validate_event_type_leads.py
+│   ├── category_analysis.py
+│   ├── event_coverage_analysis.py
+│   ├── final_event_coverage_analysis.py
+│   ├── recommendation.py
+│   └── prepare_verification_tracker.py
 │
 ├── tests/
 │   ├── run_all_tests.py
 │   └── test_scenario_4.py
 │
 ├── .gitignore
+├── requirements.txt
 └── README.md
 ```
 
-Note: The virtual environment (`venv/`) and Jupyter checkpoint files are excluded from GitHub.
-
-```text
-eventease-ai-ml-task01/
-│
-├── data/
-│   ├── raw/
-│   ├── clean/
-│   └── reference/
-│
-├── docs/
-│   ├── data_dictionary.md
-│   └── test_results.md
-│
-├── notebooks/
-│
-├── src/
-│
-├── tests/
-│
-├── README.md
-└── .gitignore
-```
+Note: This is the main project structure. Additional scripts and generated reports may also exist. The virtual environment (`venv/`) and Jupyter checkpoint files are excluded from GitHub.
 
 ## 12. How to Run the Project
 
@@ -313,76 +316,59 @@ Run commands from the project root directory.
 
 ### A. Install Dependencies
 
-Activate the virtual environment and install the required packages:
+Activate the virtual environment and install dependencies:
 
 ```bash
-pip install pandas numpy tabulate
+pip install -r requirements.txt
 ```
 
-### B. Generate and Prepare Datasets
-
-Run these commands when setting up or intentionally regenerating the datasets:
+### B. Generate and Prepare Synthetic Vendor Data
 
 ```bash
 python src/create_category_datasets.py
 python src/generate_data.py
 python src/data_cleaning.py
+python src/complete_vendor_schema.py
 ```
 
-**Important:** Dataset generation scripts may overwrite existing CSV files. Keep backups of any manually updated data before regenerating datasets.
+Important: Dataset generation scripts may overwrite existing CSV files. Keep backups of manually updated data before regenerating datasets.
 
-### C. Validate Existing Datasets
+### C. Prepare and Combine Venue Leads
+
+Run these scripts when creating or updating the venue lead datasets:
+
+```bash
+python src/create_venue_leads.py
+python src/create_new_venue_leads.py
+python src/combine_venue_leads.py
+python src/create_venue_verification_report.py
+```
+
+Important: The lead creation scripts may overwrite existing files. Do not rerun them after manual updates unless regeneration is intentional.
+
+### D. Validate Existing Datasets
 
 ```bash
 python src/validate_data.py
-python src/category_analysis.py
-python src/venue_verification_report.py
 python src/validate_venue_leads.py
 python src/validate_event_type_leads.py
+python src/category_analysis.py
 ```
 
-### D. Run Event Coverage Analysis
+### E. Run Event Coverage Analysis
 
 ```bash
 python src/event_coverage_analysis.py
 python src/final_event_coverage_analysis.py
 ```
 
-### E. Run Recommendation Tests
+### F. Run Recommendation Tests
 
 ```bash
 python tests/run_all_tests.py
 ```
 
 The recommendation prototype uses synthetic vendor data and a separate temporary fixture for the unavailable-vendor test.
-
-**Important:** Venue leads and event-type leads are maintained separately. Avoid rerunning their creation scripts after manual updates unless regeneration is intentional.
-
-Activate the Python virtual environment before running the scripts.
-
-Install the required dependencies:
-
-```bash
-pip install pandas numpy tabulate
-```
-
-Run the scripts from the project root directory in the following order:
-
-```bash
-python src/create_category_datasets.py
-python src/generate_data.py
-python src/data_cleaning.py
-python src/validate_data.py
-python src/category_analysis.py
-python src/venue_verification_report.py
-python src/validate_venue_leads.py
-python src/validate_event_type_leads.py
-python src/event_coverage_analysis.py
-python src/final_event_coverage_analysis.py
-python tests/run_all_tests.py
-```
-
-**Note:** The venue leads and event-type leads are maintained separately. Do not rerun their creation scripts after manual updates unless you intend to regenerate those files.
 
 ## 13. Future Work
 
@@ -402,25 +388,3 @@ Data collection, cleaning, validation, category analysis, event coverage analysi
 The prepared datasets provide a foundation for future vendor discovery and AI-powered recommendation development.
 
 **Data integrity note:** Synthetic records, potential business leads and verified business information are maintained as distinct data types. Pending records must not be presented as verified vendors.
-
-## Dataset Structure and Authenticity
-
-The cleaned vendor dataset contains 60 synthetic sample records and 18 columns.
-
-It includes vendor identification, category, subcategory, event type, location, pricing, rating, availability, description, services offered and contact information.
-
-### Data Authenticity
-
-- All 60 vendor records are synthetic.
-- Ratings and review counts are sample values, not verified customer reviews.
-- Descriptions and services are sample content.
-- Contact information is NULL because verified contact details are unavailable.
-- Real venue and event-planner leads are stored separately and remain pending verification.
-
-### Data Preparation
-
-The dataset was cleaned and validated using Python and Pandas. Duplicate IDs were checked, categorical values were organized, and the required dataset fields were added.
-
-### Recommendation Prototype
-
-A rule-based recommendation prototype was developed using budget, location, rating and event relevance. It is not a trained machine learning model.

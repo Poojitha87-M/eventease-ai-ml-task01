@@ -1,4 +1,11 @@
 
+# Venue lead collection scope
+# Target locations:
+# Mumbai, Bangalore, Pune, Thane
+#
+# Only add real-world venues after checking their
+# name, address, location, and publicly available source.
+# Keep unverified details blank.
 import pandas as pd
 from pathlib import Path
 
@@ -144,7 +151,7 @@ output_folder = project_root / "data" / "raw"
 output_folder.mkdir(parents=True, exist_ok=True)
 
 # Save CSV
-output_file = output_folder / "venue_leads.csv"
+output_file = output_folder / "venue_leads_legacy.csv"
 df.to_csv(output_file, index=False)
 
 print("Venue leads CSV created successfully!")

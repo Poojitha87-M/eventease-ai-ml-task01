@@ -29,9 +29,10 @@ categories = [
 # ==========================================
 
 locations = [
-    "CBD Belapur",
-    "Vashi",
-    "Nerul"
+    "Mumbai",
+    "Bangalore",
+    "Pune",
+    "Thane"
 ]
 
 
@@ -70,10 +71,11 @@ category_prices = {
 # ==========================================
 
 # Each location receives 20 vendors.
-vendor_locations = np.tile(locations, 20)
+vendor_locations = np.tile(locations, 15)
 
-# Shuffle locations randomly.
 rng.shuffle(vendor_locations)
+
+
 
 
 # ==========================================

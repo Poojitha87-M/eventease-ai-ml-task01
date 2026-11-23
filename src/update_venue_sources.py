@@ -3,68 +3,29 @@ import pandas as pd
 from pathlib import Path
 
 project_root = Path(__file__).resolve().parent.parent
-file_path = project_root / "data" / "raw" / "venue_leads.csv"
+file_path = project_root / "data" / "raw" / "venue_leads_new.csv"
 
 df = pd.read_csv(file_path)
 
-source_updates = {
-    "VEN001": {
-        "source_url": "https://www.theparkhotels.com/amp/navi-mumbai/banquets/",
-        "source_type": "Official Website",
-        "event_type": "Wedding|Corporate Event|Private Party"
-    },
-    "VEN002": {
-        "source_url": "",
-        "source_type": "Public Business Listing",
-        "event_type": "Wedding|Family Function|Community Event"
-    },
-    "VEN003": {
-        "source_url": "https://grandgoldenbanquet.com/",
-        "source_type": "Official Website",
-        "event_type": "Wedding|Birthday|Corporate Event|Private Party"
-    },
-    "VEN004": {
-        "source_url": "",
-        "source_type": "Public Business Listing",
-        "event_type": ""
-    },
-    "VEN005": {
-        "source_url": "https://bhanushalibanquets.in/nerul-venue/",
-        "source_type": "Official Website",
-        "event_type": "Wedding|Birthday|Engagement"
-    },
-    "VEN006": {
-        "source_url": "https://madhavbanquetnerul.com/contact/",
-        "source_type": "Official Website",
-        "event_type": "Wedding|Birthday|Corporate Event|Engagement|Baby Shower"
-    },
-    "VEN007": {
-        "source_url": "https://weddingz.in/wedding-lawns/mumbai/navi-mumbai/",
-        "source_type": "Third-party Directory",
-        "event_type": "Wedding"
-    }
+official_sources = {
+    "VEN008": "https://www.flagsbanquet.in/contact-us",
+    "VEN009": "https://www.manekventures.com/hospitality",
+    "VEN011": "https://www.marigoldbanquets.com/",
+    "VEN012": "https://vishnukrupa.in/",
+    "VEN013": "https://in.linkedin.com/company/siddhi-gardens-and-banquets-pune",
+    "VEN015": "https://mahajangrandbanquet.com/",
+    "VEN016": "https://murlidharbanquet.com/",
+    "VEN017": "https://madhavbanquetthane.com/contact-us/",
+    "VEN018": "https://www.ileafritz.com/contact.html",
+    "VEN010": "https://banquethallhub.com/banquethall/sawai-banquets-lawns-by-atarah-mumbai-1008/",
+    "VEN014": "https://magicpin.in/Bangalore/Kadugondanahalli/Other/Cma-Grand-Convention-and-Wedding-Hall/store/188a453"
 }
 
-if "source_type" not in df.columns:
-    df["source_type"] = ""
+for vendor_id, url in official_sources.items():
+    df.loc[df["vendor_id"] == vendor_id, "source_url"] = url
 
-for vendor_id, details in source_updates.items():
-    mask = df["vendor_id"] == vendor_id
-
-    for column, value in details.items():
-        if value:
-            df.loc[mask, column] = value
-
-# Do not mark any venue verified automatically
-df["verification_status"] = "Pending"
-
+# Keep CMA source blank until an official source is confirmed.
 df.to_csv(file_path, index=False)
 
-print("Source records updated successfully!")
-print("\n", df[
-    ["vendor_id", "vendor_name", "source_type",
-     "event_type", "verification_status"]
-].to_string(index=False))
-
-print("\nTotal records:", len(df))
-print("Pending records:", (df["verification_status"] == "Pending").sum())
+print("Venue source URLs updated!")
+print(df[["vendor_id", "vendor_name", "source_url"]].to_string(index=False))

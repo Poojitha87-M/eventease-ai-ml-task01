@@ -1,5 +1,5 @@
 
-# EventEase – Data Dictionary
+# EventEase â€“ Data Dictionary
 
 ## 1. Project Overview
 
@@ -198,7 +198,7 @@ Potential leads must not be interpreted as confirmed vendor coverage.
 ## 12. Pricing Rules
 
 1. Per-plate and per-event prices are stored separately.
-2. Per-plate estimated cost = price per plate × number of guests.
+2. Per-plate estimated cost = price per plate Ã— number of guests.
 3. Per-event estimated cost = event price.
 4. Vendors supporting both pricing models must have both sets of price fields.
 5. Fields for an inapplicable pricing model must remain blank.
@@ -220,9 +220,9 @@ Potential leads must not be interpreted as confirmed vendor coverage.
 
 ## 14. Pilot Locations
 
-- CBD Belapur – Primary pilot location.
-- Vashi – Secondary location.
-- Nerul – Secondary location.
+- CBD Belapur â€“ Primary pilot location.
+- Vashi â€“ Secondary location.
+- Nerul â€“ Secondary location.
 
 ## 15. Synthetic Data Notice
 
@@ -252,3 +252,33 @@ Subcategories, descriptions and services offered in these records are also sampl
 Contact information is currently NULL because verified public contact details are not available for these synthetic records.
 
 Real venue and event-planner leads are maintained separately with Pending verification status.
+
+## 8. New Venue Leads
+
+File: `data/raw/venue_leads_new.csv`
+
+- Total records: 11
+- Locations: Mumbai, Bangalore, Pune and Thane
+- Synthetic records: 0
+- Verification status: Pending
+- Duplicate vendor IDs: 0
+- Duplicate vendor names: 0
+
+All venue leads are collected as potential real-world business leads.
+Their names, addresses and contact information require independent
+verification before being treated as confirmed vendor records.
+
+## 9. Venue Verification Report
+
+File: `data/clean/venue_verification_report.csv`
+
+The report tracks source-review progress for all 11 new venue leads.
+
+| Source review status | Count |
+|---|---:|
+| Source details matched | 2 |
+| Partially checked | 1 |
+| Address discrepancy | 1 |
+| Not reviewed | 7 |
+
+All 11 records retain Pending verification status.
