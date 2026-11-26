@@ -1,32 +1,150 @@
-# EventEase – AI/ML & Data Engineering Internship
 
-## Task 01: Dataset Collection and Preparation
+# EventEase – AI/ML & Data Engineering Internship Project
 
 ## 1. Project Overview
 
-The objective of this task is to collect, organize, clean, validate and analyze structured event vendor data for EventEase.
+EventEase is an AI-powered event vendor discovery and recommendation project. The objective is to prepare structured vendor datasets, clean and validate vendor information, track vendor verification, and develop a recommendation prototype to help users discover suitable event vendors.
 
-The prepared datasets will support the future development of an AI-powered event vendor recommendation and discovery system.
+This project currently focuses on data engineering, vendor research, data quality, and rule-based recommendations.
 
-## 2. Project Scope
+## 2. Project Objectives
 
-**Synthetic vendor dataset locations:**
-- Mumbai
-- Bangalore
-- Pune
-- Thane
+- Create structured vendor datasets for different event categories.
+- Organize vendors by category, subcategory, and location.
+- Clean duplicate, missing, and inconsistent records.
+- Collect vendor information from publicly available sources.
+- Develop a vendor verification tracker.
+- Build a rule-based vendor recommendation prototype.
+- Test recommendation scenarios and document limitations.
 
-**Venue lead locations:**
-- Legacy leads: CBD Belapur, Vashi and Nerul
-- New leads: Mumbai, Pune, Bangalore and Thane
+## 3. Technology Stack
 
-Location values are maintained separately to support location-based vendor filtering.
+- Python
+- Pandas
+- NumPy
+- CSV and Excel
+- Git and GitHub
+- VS Code
+- Rule-based recommendation logic
 
-## 3. Datasets Created
+## 4. Project Location Scope
 
-### A. Event Categories
+The current approved target locations are:
 
-Contains eight required event types:
+1. Thane, Maharashtra
+2. Pune, Maharashtra
+3. Bangalore, Karnataka
+
+**Note:** Vashi, CBD Belapur, and Mahape are not included in the current approved target-location scope.
+
+## 5. Vendor Categories
+
+The project covers six main vendor categories:
+
+- Catering
+- Decoration
+- Photography
+- Makeup
+- Entertainment
+- Event Planning
+
+## 6. Dataset Preparation
+
+The project includes structured vendor datasets with fields such as:
+
+- Vendor ID
+- Vendor name
+- Main category
+- Subcategory
+- Location
+- Minimum and maximum price
+- Pricing type
+- Rating
+- Availability
+- Event types supported
+- Guest capacity
+- Synthetic data indicator
+
+Pricing fields are maintained separately for per-plate and per-event pricing wherever applicable.
+
+The project distinguishes between per-plate pricing, per-event pricing, and both pricing models. Unknown pricing information is not treated as confirmed.
+
+## 7. Synthetic Vendor Dataset
+
+A synthetic vendor dataset was created for development and testing.
+
+The dataset contains sample vendor records across different categories and locations.
+
+Synthetic records are identified using the `is_synthetic` field.
+
+These records are used for testing data-processing and recommendation functionality. They should not be treated as real, verified businesses.
+
+## 8. Vendor Research Dataset
+
+A separate vendor research dataset was prepared using publicly available business listings.
+
+The current researched dataset contains **61 vendor leads**.
+
+### Location distribution
+
+| Location | Vendor leads |
+|---|---:|
+| Thane, Maharashtra | 20 |
+| Pune, Maharashtra | 21 |
+| Bangalore, Karnataka | 20 |
+| **Total** | **61** |
+
+### Category distribution
+
+| Category | Vendor leads |
+|---|---:|
+| Catering | 14 |
+| Decoration | 12 |
+| Photography | 10 |
+| Makeup | 9 |
+| Entertainment | 9 |
+| Event Planning | 7 |
+| **Total** | **61** |
+
+These records are research leads. A public listing match does not mean that all vendor details have been independently verified.
+
+## 9. Vendor Verification Tracker
+
+A vendor verification tracker was developed to record public listing matches and identify details that still require confirmation.
+
+Current tracker results:
+
+| Verification information | Result |
+|---|---:|
+| Total vendor records | 61 |
+| Public listing matched - details pending | 59 |
+| Pending - public listing found | 2 |
+| Records with direct source URLs | 19 |
+| High-priority verification records | 56 |
+| Medium-priority verification records | 5 |
+
+The tracker helps prioritize vendor verification before the information is used for actual recommendations or bookings.
+
+## 10. Data Quality and Validation
+
+Data preparation and validation include:
+
+- Checking required columns.
+- Identifying missing values.
+- Checking duplicate vendor IDs.
+- Checking duplicate vendor and location combinations.
+- Validating rating ranges.
+- Checking supported locations.
+- Checking category consistency.
+- Reviewing pricing information.
+- Tracking verification status.
+
+Validation scripts are used to identify data quality issues and maintain a consistent dataset structure.
+
+## 11. Event Coverage
+
+The datasets include multiple event types, such as:
+
 - Wedding
 - Birthday
 - Corporate Event
@@ -36,463 +154,247 @@ Contains eight required event types:
 - Private Party
 - Festival
 
-File: `data/reference/event_categories.csv`
+Event coverage analysis is used to understand which vendor categories and event types are represented in the available data.
 
-### B. Vendor Categories
+## 12. Recommendation Prototype
 
-Contains seven main vendor categories:
-- Decoration
-- Photography
-- Catering
-- Venues
-- Entertainment
-- Makeup
-- Event Planning
+A rule-based vendor recommendation prototype was developed.
 
-Each category is organized with corresponding subcategories.
+The prototype accepts user inputs such as:
 
-File: `data/reference/vendor_categories.csv`
+- Vendor category
+- Event type
+- Location
+- Budget
+- Number of guests
+- Recommendation mode
 
-### C. Decoration Subcategories
+It filters vendors based on the selected criteria and calculates recommendation scores.
 
-Contains four decoration service types:
-- Stage
-- Balloon
-- Floral
-- Theme Decoration
-
-File: `data/reference/decoration_subcategories.csv`
-
-### D. Synthetic Vendor Master Dataset
-
-Contains 60 synthetic sample vendor records across six vendor categories and four locations.
-
-Current location distribution:
-- Mumbai: 15
-- Bangalore: 15
-- Pune: 15
-- Thane: 15
-
-The dataset includes vendor identification, category, subcategory, event type, location, pricing, description, services offered, rating, availability and contact information.
-
-All 60 records are marked as synthetic. Ratings, review counts, descriptions and services are sample data, not independently verified business information.
-
-Main output: `data/clean/vendors_clean.csv`
-
-### E. Venue Leads
-
-Venue leads are maintained separately from synthetic vendor records.
-
-**Legacy venue leads:**
-- 7 potential leads
-- Locations: CBD Belapur, Vashi and Nerul
-- File: `data/raw/venue_leads_legacy.csv`
-
-**New venue leads:**
-- 11 potential leads
-- Locations: Mumbai, Pune, Bangalore and Thane
-- File: `data/raw/venue_leads_new.csv`
-
-**Combined venue leads:**
-- 18 total records
-- 16 columns
-- Zero duplicate vendor IDs
-- All records marked non-synthetic
-- All records have Pending verification status
-
-File: `data/clean/all_venue_leads.csv`
-
-### F. Venue Verification Report
-
-Tracks source-review progress for the 11 new venue leads.
-
-| Source review status | Count |
-|---|---:|
-| Source details matched | 1 |
-| Partially checked | 2 |
-| Address discrepancy | 1 |
-| Not reviewed | 7 |
-
-All 11 leads remain Pending verification. Source review does not mean that the businesses have been fully verified.
-
-File: `data/clean/venue_verification_report.csv`
-
-### G. Event-Type Leads
-
-Contains four additional potential business leads for event coverage research.
-
-- Candidate event types are stored separately from confirmed event types.
-- All four records have Pending verification status.
-- Candidate event types require confirmation before being treated as actual services.
-
-## 4. Data Cleaning
-
-Data cleaning was performed using Python and Pandas.
-
-Operations included:
-- Removing duplicate rows.
-- Checking duplicate vendor IDs.
-- Removing unnecessary whitespace.
-- Standardizing vendor category names.
-- Standardizing pricing type values.
-- Checking missing values.
-- Preparing the cleaned vendor dataset.
-
-Latest synthetic vendor dataset:
-- 60 records
-- 18 columns
-- Zero duplicate rows
-- Zero duplicate vendor IDs
-
-Output: `data/clean/vendors_clean.csv`
-
-## 5. Data Validation
-
-Validation checks included:
-- Dataset dimensions.
-- Duplicate records and vendor IDs.
-- Missing values.
-- Vendor locations and categories.
-- Verification status.
-- Synthetic data identification.
-- Venue lead validation.
-- Event-type lead validation.
-
-The synthetic vendor dataset contains six categories. Real-world venue leads are maintained separately.
-
-The combined venue dataset contains 18 records, with no duplicate IDs and no missing required fields.
-
-## 6. Event Coverage Analysis
-
-Analyzed coverage for all eight required event types using the synthetic vendor dataset.
-
-| Event Type | Sample Vendor Count |
-|---|---:|
-| Wedding | 19 |
-| Birthday | 18 |
-| Corporate Event | 15 |
-| Engagement | 17 |
-| Baby Shower | 13 |
-| College Event | 13 |
-| Private Party | 20 |
-| Festival | 11 |
-
-All eight required event types are represented in the synthetic sample dataset.
-
-Potential leads from the separate venue and event-type lead datasets are maintained separately from synthetic vendor counts.
-
-Output: `data/clean/final_event_coverage_report.csv`
-
-## 7. Pricing Data Handling
-
-Pricing information is maintained using separate fields:
-- `min_price_per_plate`
-- `max_price_per_plate`
-- `min_price_per_event`
-- `max_price_per_event`
-- `pricing_type`
-
-Pricing types include:
-- `per_plate`
-- `per_event`
-- `both`
-
-Irrelevant pricing fields are left blank (NULL). Per-plate pricing is not inferred from per-event pricing or vice versa.
-
-## 8. Recommendation Prototype
-
-A basic rule-based vendor recommendation prototype was developed and tested using the cleaned synthetic vendor dataset.
-
-The prototype evaluates:
-- Vendor category.
-- Availability.
-- Budget compatibility.
-- Location relevance.
-- Rating.
-- Event relevance.
-
-Scoring weights:
+### Recommendation scoring weights
 
 | Factor | Weight |
 |---|---:|
-| Budget | 35% |
-| Location | 30% |
+| Budget compatibility | 35% |
+| Location match | 30% |
 | Rating | 25% |
-| Event Relevance | 10% |
+| Event relevance | 10% |
+| **Total** | **100%** |
 
-Five test scenarios were processed, including an unavailable-vendor test using a separate temporary test fixture.
+Availability is treated as a filtering condition where confirmed availability is required.
 
-The prototype is rule-based and does not use a trained Machine Learning model.
+### Recommendation modes
 
-Test documentation: `docs/test_results.md`
+**Research/Demo Mode**
 
-## 9. Current Limitations
+- Allows exploration of researched vendor leads.
+- Displays available public listing information.
+- Clearly identifies unconfirmed pricing and availability.
+- Labels results as research leads rather than confirmed booking options.
 
-- The 60 vendor records are synthetic sample data.
-- Venue leads and event-type leads are potential business leads, not confirmed vendors.
-- All 18 combined venue leads currently have Pending verification status.
-- The 11 new venue leads have a separate source-review report.
-- Candidate event types are not confirmed services.
-- Real business contact details, availability, ratings and services require verification.
-- Location scoring is a prototype assumption and does not calculate actual geographical distance.
-- Recommendation results from synthetic data are for testing purposes only.
-- Advanced machine learning model training is outside the scope of this initial dataset preparation task.
+**Verified Mode**
 
-## 10. Tools and Technologies
+- Applies stricter checks for information required for actual vendor selection.
+- Avoids treating missing pricing, availability, or capacity information as confirmed.
+- Excludes vendors that do not meet the required verification conditions.
 
-- Python
-- Pandas
-- NumPy
-- Excel
-- CSV
-- VS Code
-- Git and GitHub
+## 13. Recommendation Output
 
-## 11. Project Folder Structure
+The recommendation prototype displays information such as:
+
+- Vendor ID
+- Vendor name
+- Category
+- Location
+- Price information
+- Listed rating
+- Availability status
+- Recommendation score
+- Recommendation status
+
+For example, a research lead may display:
+
+- Price: Not confirmed
+- Rating: Listed rating, not independently verified
+- Availability: Unconfirmed
+- Status: Research lead - verify before booking
+
+A recommendation score does not guarantee vendor suitability or booking availability.
+
+## 14. Assignment Scenario Testing
+
+A separate assignment scenario test file was created:
+
+`tests/test_assignment_scenarios.py`
+
+Five scenarios were tested:
+
+1. Wedding Decoration – Thane
+2. Birthday Catering – Pune
+3. Corporate Photography – Bangalore
+4. Low-budget Event Planning
+5. Search without budget
+
+### Test results
+
+| Test result | Count |
+|---|---:|
+| Total scenarios | 5 |
+| Passed | 5 |
+| Failed | 0 |
+
+**All five assignment scenarios passed successfully.**
+
+These tests use synthetic test fixtures to validate recommendation logic and filtering behaviour. They do not establish real-world vendor pricing, availability, or booking status.
+
+## 15. Existing Test Suite
+
+The project also contains the existing test runner:
+
+`tests/run_all_tests.py`
+
+The assignment scenario tests and the existing test suite are separate. Their results should be reported independently.
+
+## 16. Project Structure
+
+The project contains source scripts, datasets, documentation, and test files.
 
 ```text
 eventease-ai-ml-task01/
 │
 ├── data/
 │   ├── raw/
-│   │   ├── vendors.csv
-│   │   ├── venue_leads_legacy.csv
-│   │   ├── venue_leads_new.csv
-│   │   └── event_type_leads.csv
-│   │
-│   ├── clean/
-│   │   ├── vendors_clean.csv
-│   │   ├── all_venue_leads.csv
-│   │   ├── venue_verification_report.csv
-│   │   ├── event_coverage_report.csv
-│   │   └── final_event_coverage_report.csv
-│   │
-│   └── reference/
-│       ├── decoration_subcategories.csv
-│       ├── event_categories.csv
-│       └── vendor_categories.csv
+│   ├── processed/
+│   └── research/
+│
+├── src/
+│   ├── data_cleaning.py
+│   ├── generate_data.py
+│   ├── complete_vendor_schema.py
+│   ├── recommendation.py
+│   ├── validate_data.py
+│   ├── create_category_datasets.py
+│   ├── create_event_type_leads.py
+│   ├── prepare_verification_tracker.py
+│   └── venue_verification_report.py
+│
+├── tests/
+│   ├── run_all_tests.py
+│   └── test_assignment_scenarios.py
 │
 ├── docs/
 │   ├── data_dictionary.md
 │   └── test_results.md
 │
-├── notebooks/
-│   └── data_cleaning.ipynb
-│
-├── src/
-│   ├── create_category_datasets.py
-│   ├── generate_data.py
-│   ├── data_cleaning.py
-│   ├── complete_vendor_schema.py
-│   ├── create_venue_leads.py
-│   ├── create_new_venue_leads.py
-│   ├── combine_venue_leads.py
-│   ├── create_venue_verification_report.py
-│   ├── create_event_type_leads.py
-│   ├── update_venue_sources.py
-│   ├── validate_data.py
-│   ├── validate_venue_leads.py
-│   ├── validate_event_type_leads.py
-│   ├── category_analysis.py
-│   ├── event_coverage_analysis.py
-│   ├── final_event_coverage_analysis.py
-│   ├── recommendation.py
-│   └── prepare_verification_tracker.py
-│
-├── tests/
-│   ├── run_all_tests.py
-│   └── test_scenario_4.py
-│
-├── .gitignore
-├── requirements.txt
 └── README.md
 ```
 
-Note: This is the main project structure. Additional scripts and generated reports may also exist. The virtual environment (`venv/`) and Jupyter checkpoint files are excluded from GitHub.
+This is a high-level overview. Refer to the actual repository for the complete list of files and scripts.
 
-## 12. How to Run the Project
+## 17. How to Run the Project
 
-Run commands from the project root directory.
-
-### A. Install Dependencies
-
-Activate the virtual environment and install dependencies:
+### Step 1: Clone the repository
 
 ```bash
-pip install -r requirements.txt
+git clone https://github.com/Poojitha87-M/eventease-ai-ml-task01.git
+cd eventease-ai-ml-task01
 ```
 
-### B. Generate and Prepare Synthetic Vendor Data
+### Step 2: Create and activate a virtual environment
 
 ```bash
-python src/create_category_datasets.py
-python src/generate_data.py
-python src/data_cleaning.py
-python src/complete_vendor_schema.py
+python -m venv venv
 ```
 
-Important: Dataset generation scripts may overwrite existing CSV files. Keep backups of manually updated data before regenerating datasets.
+Windows PowerShell:
 
-### C. Prepare and Combine Venue Leads
+```powershell
+.\venv\Scripts\Activate.ps1
+```
 
-Run these scripts when creating or updating the venue lead datasets:
+### Step 3: Install dependencies
 
 ```bash
-python src/create_venue_leads.py
-python src/create_new_venue_leads.py
-python src/combine_venue_leads.py
-python src/create_venue_verification_report.py
+pip install pandas numpy
 ```
 
-Important: The lead creation scripts may overwrite existing files. Do not rerun them after manual updates unless regeneration is intentional.
+Install any additional dependencies required by individual project scripts.
 
-### D. Validate Existing Datasets
+### Step 4: Run the recommendation prototype
 
 ```bash
-python src/validate_data.py
-python src/validate_venue_leads.py
-python src/validate_event_type_leads.py
-python src/category_analysis.py
+python src/recommendation.py
 ```
 
-### E. Run Event Coverage Analysis
+### Step 5: Run assignment scenario tests
 
 ```bash
-python src/event_coverage_analysis.py
-python src/final_event_coverage_analysis.py
+python tests/test_assignment_scenarios.py
 ```
 
-### F. Run Recommendation Tests
+Expected result:
+
+```text
+Total scenarios: 5
+Passed: 5
+Failed: 0
+```
+
+### Step 6: Run the existing test suite
 
 ```bash
 python tests/run_all_tests.py
 ```
 
-The recommendation prototype uses synthetic vendor data and a separate temporary fixture for the unavailable-vendor test.
+## 18. Current Project Achievements
 
-## 13. Future Work
+- Prepared structured vendor datasets.
+- Created synthetic data for development and testing.
+- Collected 61 researched vendor leads.
+- Organized researched leads across Thane, Pune, and Bangalore.
+- Prepared a vendor verification tracker.
+- Generated verification-priority information.
+- Implemented a rule-based recommendation prototype.
+- Corrected location normalization and filtering.
+- Added Research/Demo and Verified recommendation modes.
+- Created five assignment scenario tests.
+- Achieved five passing assignment scenario tests.
+- Documented current data quality limitations and future improvements.
 
-- Verify real vendor information.
-- Collect additional vendors for missing event categories and services.
-- Improve dataset coverage.
-- Confirm vendor services and availability.
-- Prepare verified data for future AI/ML development.
-- Explore trained recommendation models when verified data becomes available.
+## 19. Current Limitations
 
-## 14. Conclusion
+The current project still has limitations:
 
-Task 01 established the initial structured datasets for the EventEase platform.
+- Vendor pricing and pricing models require confirmation.
+- Vendor availability has not been independently confirmed.
+- Guest capacity information requires verification.
+- Listed ratings are not necessarily independently verified.
+- Only 19 of the 61 researched records currently have direct source URLs in the tracker.
+- More verified contact information is required.
+- Real-world recommendation performance has not yet been established.
 
-Data collection, cleaning, validation, category analysis, event coverage analysis and a basic rule-based recommendation prototype were implemented using Python and Pandas.
+The five assignment scenarios passed using synthetic test fixtures. They validate prototype behaviour and filtering logic, not the real-world accuracy of vendor recommendations.
 
-The prepared datasets provide a foundation for future vendor discovery and AI-powered recommendation development.
-
-**Data integrity note:** Synthetic records, potential business leads and verified business information are maintained as distinct data types. Pending records must not be presented as verified vendors.
-
----
-
-# Task 02: Vendor Intelligence and Recommendation System
-
-## 15. Vendor Research Dataset
-
-The vendor research dataset contains 61 researched vendor leads.
-
-Current research locations:
-- Thane, Maharashtra
-- Pune, Maharashtra
-- Bangalore, Karnataka
-
-Vendor categories:
-- Catering
-- Photography
-- Decoration
-- Event Planning
-- Makeup
-- Entertainment
-
-The researched dataset is maintained separately from the synthetic vendor dataset used for recommendation testing.
-
-## 16. Vendor Verification
-
-A vendor verification tracker was developed to record public listing matches, direct source URLs, verified ratings, verified contacts and research notes.
-
-Latest verification results:
-- Total researched records: 61
-- Public listing matched - details pending: 59
-- Pending - public listing found: 2
-- Records with direct source URLs: 19
-- High verification priority: 56
-- Medium verification priority: 5
-
-The verification-priority script identifies missing information and generates a CSV task list and text report.
-
-Generated files:
-- reports/vendor_verification_priority.csv
-- reports/vendor_verification_priority_report.txt
-
-## 17. Data Quality and Validation
-
-The final vendor validation script reported:
-- Required columns missing: 0
-- Total records: 61
-- Unique vendor IDs: 61
-- Duplicate vendor IDs: 0
-- Duplicate vendor/location pairs: 0
-- Invalid listed ratings: 0
-- Invalid verified ratings: 0
-
-Important data limitations:
-- Availability is unconfirmed for all 61 researched records.
-- Pricing type is unconfirmed for all 61 records.
-- Guest capacity is missing for all 61 records.
-- Verified ratings are missing for 56 records.
-
-Missing information is retained as unknown rather than being invented.
-
-## 18. Rule-Based Recommendation Prototype
-
-The recommendation prototype accepts:
-- Vendor category
-- Event location
-- Event type
-- Total budget
-- Number of guests
-
-Scoring weights:
-- Budget compatibility: 35%
-- Location: 30%
-- Rating: 25%
-- Service relevance: 10%
-
-Availability is used as a filtering condition.
-
-The prototype supports Research/Demo Mode and Verified Mode. Research/Demo Mode displays researched leads that still require confirmation. Verified Mode filters using confirmed vendor information.
-
-The current recommendation tests use the cleaned synthetic dataset. The researched vendor dataset is maintained separately.
-
-## 19. Recommendation Testing
-
-The existing automated test runner completed and generated docs/test_results.md.
-
-Results:
-- Birthday Catering: 1 budget-compatible vendor.
-- Wedding Decoration: 9 budget-compatible vendors.
-- Very Low Budget Entertainment: 0 suitable vendors.
-- Small Event Photography: 8 budget-compatible vendors.
-- Makeup Artist Unavailability: PASS - no unavailable vendor was recommended.
-
-These results demonstrate the current prototype behaviour using synthetic test data and a separate unavailability test fixture.
-
-The five exact scenarios in the original internship acceptance checklist still require separate confirmation.
-
-## 20. Current Limitations and Future Work
+## 20. Future Work
 
 - Confirm researched vendor prices and pricing models.
 - Verify vendor availability and guest capacity.
 - Collect more direct source links and verified contact details.
-- Complete all five originally specified assignment scenarios.
 - Review the recommendation API response format.
 - Improve recommendation accuracy using verified vendor data.
+- Expand testing with verified real-world vendor information.
+- Consider machine-learning-based ranking after sufficient verified data becomes available.
 
-The current system is a rule-based recommendation prototype, not a trained machine-learning model.
+## 21. Important Project Note
 
+The current recommendation system is a **rule-based recommendation prototype, not a trained machine-learning model**.
+
+Synthetic data is used for development and scenario testing, while researched vendor leads are maintained separately for verification.
+
+The project does not claim that researched vendors are ready for booking. Vendor details must be confirmed before real-world use.
+
+## 22. Repository
+
+GitHub Repository:
+
+https://github.com/Poojitha87-M/eventease-ai-ml-task01
