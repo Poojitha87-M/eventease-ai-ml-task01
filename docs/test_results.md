@@ -13,17 +13,17 @@ Scoring weights: Budget 35%, Location 30%, Rating 25%, Event relevance 10%.
 - Budget-compatible vendors: 1
 
 - Top vendor: Synthetic Catering Vendor 019
-- Location: Vashi
+- Location: Mumbai
 - Estimated cost: Rs. 39116.00
 - Pricing basis: per_event
 - Rating: 3.2
-- Final score: 56.77
+- Final score: 41.77
 
 Top recommendations:
 
 | vendor_id   | vendor_name                   | location   |   estimated_cost |   final_score |
 |:------------|:------------------------------|:-----------|-----------------:|--------------:|
-| VND-019     | Synthetic Catering Vendor 019 | Vashi      |            39116 |       56.7735 |
+| VND-019     | Synthetic Catering Vendor 019 | Mumbai     |            39116 |       41.7735 |
 
 ## Scenario 2 - Wedding Decoration
 
@@ -32,21 +32,21 @@ Top recommendations:
 - Budget-compatible vendors: 9
 
 - Top vendor: Synthetic Decoration Vendor 057
-- Location: CBD Belapur
+- Location: Bangalore
 - Estimated cost: Rs. 47828.00
 - Pricing basis: per_event
 - Rating: 4.4
-- Final score: 88.63
+- Final score: 73.63
 
 Top recommendations:
 
-| vendor_id   | vendor_name                     | location    |   estimated_cost |   final_score |
-|:------------|:--------------------------------|:------------|-----------------:|--------------:|
-| VND-057     | Synthetic Decoration Vendor 057 | CBD Belapur |            47828 |       88.6301 |
-| VND-003     | Synthetic Decoration Vendor 003 | CBD Belapur |            69127 |       84.4028 |
-| VND-021     | Synthetic Decoration Vendor 021 | CBD Belapur |            24847 |       83.6518 |
-| VND-051     | Synthetic Decoration Vendor 051 | CBD Belapur |            42057 |       76.14   |
-| VND-015     | Synthetic Decoration Vendor 015 | Nerul       |            66285 |       72.4001 |
+| vendor_id   | vendor_name                     | location   |   estimated_cost |   final_score |
+|:------------|:--------------------------------|:-----------|-----------------:|--------------:|
+| VND-057     | Synthetic Decoration Vendor 057 | Bangalore  |            47828 |       73.6301 |
+| VND-015     | Synthetic Decoration Vendor 015 | Bangalore  |            66285 |       72.4001 |
+| VND-009     | Synthetic Decoration Vendor 009 | Thane      |            58024 |       71.3458 |
+| VND-003     | Synthetic Decoration Vendor 003 | Pune       |            69127 |       69.4028 |
+| VND-021     | Synthetic Decoration Vendor 021 | Pune       |            24847 |       68.6518 |
 
 ## Scenario 3 - Very Low Budget Entertainment
 
@@ -62,22 +62,22 @@ Result: No suitable vendor found.
 - Available vendors: 8
 - Budget-compatible vendors: 8
 
-- Top vendor: Synthetic Photography Vendor 014
-- Location: Vashi
-- Estimated cost: Rs. 55429.00
+- Top vendor: Synthetic Photography Vendor 056
+- Location: Mumbai
+- Estimated cost: Rs. 16988.00
 - Pricing basis: per_event
-- Rating: 4.6
-- Final score: 88.30
+- Rating: 3.5
+- Final score: 74.53
 
 Top recommendations:
 
-| vendor_id   | vendor_name                      | location    |   estimated_cost |   final_score |
-|:------------|:---------------------------------|:------------|-----------------:|--------------:|
-| VND-014     | Synthetic Photography Vendor 014 | Vashi       |            55429 |       88.2999 |
-| VND-002     | Synthetic Photography Vendor 002 | Vashi       |            50238 |       88.2083 |
-| VND-020     | Synthetic Photography Vendor 020 | Vashi       |            18529 |       82.7574 |
-| VND-056     | Synthetic Photography Vendor 056 | CBD Belapur |            16988 |       74.5271 |
-| VND-050     | Synthetic Photography Vendor 050 | CBD Belapur |            19074 |       74.162  |
+| vendor_id   | vendor_name                      | location   |   estimated_cost |   final_score |
+|:------------|:---------------------------------|:-----------|-----------------:|--------------:|
+| VND-056     | Synthetic Photography Vendor 056 | Mumbai     |            16988 |       74.5271 |
+| VND-050     | Synthetic Photography Vendor 050 | Bangalore  |            19074 |       74.162  |
+| VND-026     | Synthetic Photography Vendor 026 | Thane      |            40732 |       73.3719 |
+| VND-014     | Synthetic Photography Vendor 014 | Bangalore  |            55429 |       73.2999 |
+| VND-002     | Synthetic Photography Vendor 002 | Thane      |            50238 |       73.2083 |
 
 ## Scenario 4 - Makeup Artist Unavailability
 

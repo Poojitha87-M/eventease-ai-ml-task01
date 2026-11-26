@@ -388,3 +388,111 @@ Data collection, cleaning, validation, category analysis, event coverage analysi
 The prepared datasets provide a foundation for future vendor discovery and AI-powered recommendation development.
 
 **Data integrity note:** Synthetic records, potential business leads and verified business information are maintained as distinct data types. Pending records must not be presented as verified vendors.
+
+---
+
+# Task 02: Vendor Intelligence and Recommendation System
+
+## 15. Vendor Research Dataset
+
+The vendor research dataset contains 61 researched vendor leads.
+
+Current research locations:
+- Thane, Maharashtra
+- Pune, Maharashtra
+- Bangalore, Karnataka
+
+Vendor categories:
+- Catering
+- Photography
+- Decoration
+- Event Planning
+- Makeup
+- Entertainment
+
+The researched dataset is maintained separately from the synthetic vendor dataset used for recommendation testing.
+
+## 16. Vendor Verification
+
+A vendor verification tracker was developed to record public listing matches, direct source URLs, verified ratings, verified contacts and research notes.
+
+Latest verification results:
+- Total researched records: 61
+- Public listing matched - details pending: 59
+- Pending - public listing found: 2
+- Records with direct source URLs: 19
+- High verification priority: 56
+- Medium verification priority: 5
+
+The verification-priority script identifies missing information and generates a CSV task list and text report.
+
+Generated files:
+- reports/vendor_verification_priority.csv
+- reports/vendor_verification_priority_report.txt
+
+## 17. Data Quality and Validation
+
+The final vendor validation script reported:
+- Required columns missing: 0
+- Total records: 61
+- Unique vendor IDs: 61
+- Duplicate vendor IDs: 0
+- Duplicate vendor/location pairs: 0
+- Invalid listed ratings: 0
+- Invalid verified ratings: 0
+
+Important data limitations:
+- Availability is unconfirmed for all 61 researched records.
+- Pricing type is unconfirmed for all 61 records.
+- Guest capacity is missing for all 61 records.
+- Verified ratings are missing for 56 records.
+
+Missing information is retained as unknown rather than being invented.
+
+## 18. Rule-Based Recommendation Prototype
+
+The recommendation prototype accepts:
+- Vendor category
+- Event location
+- Event type
+- Total budget
+- Number of guests
+
+Scoring weights:
+- Budget compatibility: 35%
+- Location: 30%
+- Rating: 25%
+- Service relevance: 10%
+
+Availability is used as a filtering condition.
+
+The prototype supports Research/Demo Mode and Verified Mode. Research/Demo Mode displays researched leads that still require confirmation. Verified Mode filters using confirmed vendor information.
+
+The current recommendation tests use the cleaned synthetic dataset. The researched vendor dataset is maintained separately.
+
+## 19. Recommendation Testing
+
+The existing automated test runner completed and generated docs/test_results.md.
+
+Results:
+- Birthday Catering: 1 budget-compatible vendor.
+- Wedding Decoration: 9 budget-compatible vendors.
+- Very Low Budget Entertainment: 0 suitable vendors.
+- Small Event Photography: 8 budget-compatible vendors.
+- Makeup Artist Unavailability: PASS - no unavailable vendor was recommended.
+
+These results demonstrate the current prototype behaviour using synthetic test data and a separate unavailability test fixture.
+
+The five exact scenarios in the original internship acceptance checklist still require separate confirmation.
+
+## 20. Current Limitations and Future Work
+
+- Confirm researched vendor prices and pricing models.
+- Verify vendor availability and guest capacity.
+- Collect more direct source links and verified contact details.
+- Complete all five originally specified assignment scenarios.
+- Review the recommendation API response format.
+- Improve recommendation accuracy using verified vendor data.
+
+The current system is a rule-based recommendation prototype, not a trained machine-learning model.
+

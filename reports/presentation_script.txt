@@ -1,0 +1,38 @@
+﻿EVENTEASE - PRESENTATION SCRIPT
+Intern: Poojitha
+
+Good morning.
+
+My internship project is EventEase - Vendor Intelligence and Recommendation System.
+
+The main objective is to prepare vendor data and build a rule-based recommendation system for event requirements.
+
+First, I worked on vendor research and dataset preparation. I collected 61 researched vendor records across six categories: Catering, Photography, Decoration, Event Planning, Makeup and Entertainment.
+
+The current research dataset covers Thane, Pune and Bangalore. I maintain researched vendor records separately from synthetic sample records.
+
+Next, I worked on data engineering using Python and Pandas. I created scripts for cleaning, standardisation, duplicate checking, rating validation and missing-value analysis.
+
+The validation result shows 61 records, 61 unique vendor IDs, zero duplicate IDs and zero duplicate vendor-location pairs.
+
+I also developed a vendor verification tracker. It identifies public listing matches and records which vendor details still need confirmation. I created a verification-priority report, which classified 56 vendors as high priority and 5 as medium priority.
+
+After that, I developed a rule-based recommendation prototype.
+
+It uses four scoring factors:
+Budget compatibility 35 percent,
+Location 30 percent,
+Rating 25 percent,
+and Service relevance 10 percent.
+
+The system accepts category, location, event type, budget and guest count. Availability is used as a filter.
+
+I also executed the existing automated tests using the synthetic vendor dataset. The tests demonstrated birthday catering, wedding decoration, low-budget entertainment, photography and unavailable-vendor filtering.
+
+One important limitation is that many researched vendors still have unconfirmed pricing, availability, ratings and guest capacity. Therefore, the researched leads are not presented as confirmed bookable vendors.
+
+The current version is a rule-based prototype, not a trained machine-learning model.
+
+My next steps are to complete vendor verification, finish the required assignment scenarios and finalise the demonstration.
+
+Thank you.
