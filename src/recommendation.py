@@ -1,19 +1,21 @@
-import pandas as pd
-import re
+
 import ast
+import re
 from pathlib import Path
 
-# ============================================================
-# EVENTEASE - VENDOR RECOMMENDATION SYSTEM
-# ============================================================
+import pandas as pd
 
-DATA_PATH = Path("data/clean/vendors_researched_final.csv")
+
+# Resolve the CSV path from the project root, even when this file is run
+# from a different working directory.
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+DATA_PATH = PROJECT_ROOT / "data" / "clean" / "vendors_researched_final.csv"
 
 WEIGHTS = {
     "budget": 0.35,
     "location": 0.30,
     "rating": 0.25,
-    "relevance": 0.10
+    "relevance": 0.10,
 }
 
 CATEGORIES = [
@@ -22,231 +24,109 @@ CATEGORIES = [
     "Decoration",
     "Event Planning",
     "Makeup",
-    "Entertainment"
+    "Entertainment",
 ]
 
 LOCATIONS = {
-    "Thane, Maharashtra": [
-        "thane",
-        "thane maharashtra"
-    ],
-    "Pune, Maharashtra": [
-        "pune",
-        "pune maharashtra"
-    ],
-    "Bangalore, Karnataka": [
-        "bangalore",
-        "bangalore karnataka",
-        "bengaluru",
-        "bengaluru karnataka"
-    ]
+    "Mumbai, Maharashtra": ["mumbai"],
+    "Thane, Maharashtra": ["thane"],
+    "Pune, Maharashtra": ["pune"],
+    "Bangalore, Karnataka": ["bangalore", "bengaluru"],
 }
 
-EVENT_TYPES = [
-    "Wedding",
-    "Birthday",
-    "Corporate Event",
-    "Engagement",
-    "Baby Shower",
-    "College Event",
-    "Private Party",
-    "Festival"
-]
+EVENT_ALIASES = {
+    "Wedding": ["wedding", "weddings", "marriage", "marriages"],
+    "Birthday": ["birthday", "birthdays", "birthday party", "birthday parties"],
+    "Corporate Event": [
+        "corporate event", "corporate events", "corporate",
+        "business event", "business events",
+    ],
+    "Engagement": ["engagement", "engagements"],
+    "Baby Shower": ["baby shower", "baby showers"],
+    "College Event": [
+        "college event", "college events", "college function",
+        "college functions", "campus event", "campus events",
+    ],
+    "Private Party": ["private party", "private parties"],
+    "Festival": ["festival", "festivals", "festive event", "festive events"],
+}
 
-
-# ============================================================
-# NORMALIZATION FUNCTIONS
-# ============================================================
 
 def clean_text(value):
-    if pd.isna(value):
+    if value is None or pd.isna(value):
         return ""
-
-    return " ".join(str(value).strip().lower().split())
+    return re.sub(r"\s+", " ", str(value).strip()).lower()
 
 
 def normalize_category(category):
     value = clean_text(category)
-
     for item in CATEGORIES:
         if value == item.lower():
             return item
-
     return None
 
 
 def normalize_location(location):
-    """
-    Supports both short user inputs and full dataset locations.
-    """
-
     value = clean_text(location)
-
-    # Normalize punctuation and spaces
-    value = re.sub(r"[,]+", " ", value)
-    value = " ".join(value.split())
-
-    aliases = {
-        "thane": "Thane, Maharashtra",
-        "thane maharashtra": "Thane, Maharashtra",
-
-        "pune": "Pune, Maharashtra",
-        "pune maharashtra": "Pune, Maharashtra",
-
-        "bangalore": "Bangalore, Karnataka",
-        "bangalore karnataka": "Bangalore, Karnataka",
-
-        "bengaluru": "Bangalore, Karnataka",
-        "bengaluru karnataka": "Bangalore, Karnataka"
-    }
-
-    return aliases.get(value)
+    for canonical, aliases in LOCATIONS.items():
+        if value == canonical.lower() or value in aliases:
+            return canonical
+    return value.title() if value else ""
 
 
 def normalize_event(event):
     value = clean_text(event)
+    for canonical, aliases in EVENT_ALIASES.items():
+        if value == canonical.lower() or value in aliases:
+            return canonical
+    return None
 
-    event_aliases = {
-        "wedding": "Wedding",
-        "birthday": "Birthday",
-        "corporate": "Corporate Event",
-        "corporate event": "Corporate Event",
-        "engagement": "Engagement",
-        "baby shower": "Baby Shower",
-        "college event": "College Event",
-        "private party": "Private Party",
-        "festival": "Festival"
-    }
-
-    return event_aliases.get(value, event.strip().title() if event else "")
-
-
-# ============================================================
-# DATA LOADING
-# ============================================================
 
 def load_vendors():
     if not DATA_PATH.exists():
-        print(f"\nDataset not found: {DATA_PATH}")
-        return pd.DataFrame()
-
-    try:
-        df = pd.read_csv(DATA_PATH)
-    except Exception as error:
-        print("Error loading dataset:", error)
-        return pd.DataFrame()
-
-    df.columns = df.columns.str.strip()
-
-    if "location" in df.columns:
-        df["normalized_location"] = df["location"].apply(
-            normalize_location
+        raise FileNotFoundError(
+            f"Vendor dataset not found: {DATA_PATH}\n"
+            "Check that data/clean/vendors_researched_final.csv exists."
         )
 
-    if "main_category" in df.columns:
-        df["normalized_category"] = df["main_category"].apply(
-            normalize_category
-        )
+    df = pd.read_csv(DATA_PATH)
+    df.columns = [str(column).strip() for column in df.columns]
 
+    if "location" not in df.columns:
+        raise ValueError("Dataset is missing the required 'location' column.")
+
+    if "main_category" not in df.columns:
+        raise ValueError("Dataset is missing the required 'main_category' column.")
+
+    df["normalized_location"] = df["location"].apply(normalize_location)
+    df["normalized_category"] = df["main_category"].apply(normalize_category)
     return df
 
 
-# ============================================================
-# CUSTOMER INPUT
-# ============================================================
-
 def get_customer_input():
+    print("\n--- EventEase Vendor Recommendation ---")
 
-    print("\n========== EVENTEASE VENDOR RECOMMENDATION ==========")
+    print("\nCategories:")
+    for index, category in enumerate(CATEGORIES, start=1):
+        print(f"{index}. {category}")
+    category = input("Enter category: ").strip()
 
-    print("\nAvailable categories:")
-    for category in CATEGORIES:
-        print("-", category)
+    print("\nLocations:")
+    for location in LOCATIONS:
+        print(f"- {location}")
+    location = input("Enter location: ").strip()
 
-    while True:
-        category_input = input("\nEnter vendor category: ").strip()
-        category = normalize_category(category_input)
+    print("\nEvents:")
+    for event in EVENT_ALIASES:
+        print(f"- {event}")
+    event = input("Enter event type: ").strip()
 
-        if category:
-            break
+    budget_text = input("Enter total budget (or press Enter to skip): ").strip()
+    guests_text = input("Enter number of guests: ").strip()
+    mode = input("Mode (research/verified): ").strip().lower() or "research"
 
-        print("Invalid category. Please choose from the available categories.")
-
-    print("\nAvailable locations:")
-    available_locations = list(LOCATIONS.keys())
-
-    for index, location in enumerate(available_locations, start=1):
-        print(f"{index}. {location}")
-
-    while True:
-        location_input = input("\nEnter location: ").strip()
-        location = normalize_location(location_input)
-
-        if location:
-            break
-
-        print("Invalid location. Please choose Thane, Pune or Bangalore.")
-
-    print("\nAvailable event types:")
-    for event in EVENT_TYPES:
-        print("-", event)
-
-    while True:
-        event_input = input("\nEnter event type: ").strip()
-        event = normalize_event(event_input)
-
-        if event in EVENT_TYPES:
-            break
-
-        print("Invalid event type. Please enter a listed event type.")
-
-    while True:
-        budget_input = input(
-            "\nEnter total event budget (₹), or press Enter to skip: "
-        ).strip()
-
-        if budget_input == "":
-            budget = None
-            break
-
-        try:
-            budget = float(budget_input)
-
-            if budget <= 0:
-                print("Budget must be greater than zero.")
-                continue
-
-            break
-
-        except ValueError:
-            print("Please enter a valid number.")
-
-    while True:
-        guests_input = input("\nEnter number of guests: ").strip()
-
-        try:
-            guests = int(guests_input)
-
-            if guests <= 0:
-                print("Number of guests must be greater than zero.")
-                continue
-
-            break
-
-        except ValueError:
-            print("Please enter a valid whole number.")
-
-    print("\nRecommendation mode:")
-    print("1. Verified Mode")
-    print("2. Research/Demo Mode")
-
-    while True:
-        mode = input("Choose mode (1 or 2): ").strip()
-
-        if mode in ["1", "2"]:
-            break
-
-        print("Please choose 1 or 2.")
+    budget = float(budget_text.replace(",", "").replace("₹", "")) if budget_text else None
+    guests = int(guests_text)
 
     return {
         "category": category,
@@ -254,534 +134,388 @@ def get_customer_input():
         "event": event,
         "budget": budget,
         "guests": guests,
-        "mode": mode
+        "mode": mode,
     }
 
 
-# ============================================================
-# EVENT RELEVANCE
-# ============================================================
-
 def get_event_values(value):
-
-    if pd.isna(value):
+    """Convert a dataset event field into a list of recognizable event names."""
+    if value is None or pd.isna(value):
         return []
 
-    if isinstance(value, list):
-        return [clean_text(x) for x in value]
+    if isinstance(value, (list, tuple, set)):
+        raw_values = list(value)
+    else:
+        text = str(value).strip()
+        if not text:
+            return []
 
-    text_value = str(value).strip()
+        try:
+            parsed = ast.literal_eval(text)
+            if isinstance(parsed, (list, tuple, set)):
+                raw_values = list(parsed)
+            else:
+                raw_values = re.split(r"[,;|]", text)
+        except (ValueError, SyntaxError):
+            raw_values = re.split(r"[,;|]", text)
 
-    try:
-        parsed = ast.literal_eval(text_value)
+    recognized = set()
 
-        if isinstance(parsed, list):
-            return [clean_text(x) for x in parsed]
+    for item in raw_values:
+        item_text = clean_text(item)
+        if not item_text:
+            continue
 
-    except (ValueError, SyntaxError):
-        pass
+        # Match known event names inside descriptive phrases such as
+        # "Weddings and traditional functions".
+        for canonical, aliases in EVENT_ALIASES.items():
+            candidates = [canonical.lower()] + aliases
+            if any(
+                re.search(r"(?<![a-z])" + re.escape(alias) + r"(?![a-z])", item_text)
+                for alias in candidates
+            ):
+                recognized.add(canonical)
 
-    return [
-        clean_text(x)
-        for x in re.split(r"[,;|]", text_value)
-        if clean_text(x)
-    ]
+    return sorted(recognized)
 
 
 def calculate_relevance_score(row, selected_event):
+    selected = normalize_event(selected_event)
+    if not selected:
+        return 0
 
     possible_columns = [
         "event_types",
         "event_categories",
         "events_supported",
         "event_type",
-        "events"
+        "events",
     ]
 
-    event_values = []
-
+    supported_events = set()
     for column in possible_columns:
         if column in row.index:
-            event_values.extend(get_event_values(row[column]))
+            supported_events.update(get_event_values(row[column]))
 
-    if not event_values:
-        return 50
+    # Unknown event information is not treated as proof of support.
+    return 100 if selected in supported_events else 0
 
-    selected = clean_text(selected_event)
-
-    if selected in event_values:
-        return 100
-
-    if any(selected in item or item in selected for item in event_values):
-        return 75
-
-    return 0
-
-
-# ============================================================
-# BUDGET SCORING
-# ============================================================
 
 def get_numeric_price(value):
+    if value is None or pd.isna(value):
+        return None
 
-    if pd.isna(value):
+    text = str(value).strip()
+    if not text:
+        return None
+
+    text = text.replace(",", "").replace("₹", "").replace("INR", "").strip()
+    match = re.search(r"-?\d+(?:\.\d+)?", text)
+    if not match:
         return None
 
     try:
-        number = float(
-            str(value).replace(",", "").replace("₹", "").strip()
-        )
+        number = float(match.group())
+        return number if number >= 0 else None
+    except ValueError:
+        return None
 
-        if number < 0:
+
+def _get_range(row, minimum_column, maximum_column):
+    minimum = get_numeric_price(row.get(minimum_column))
+    maximum = get_numeric_price(row.get(maximum_column))
+
+    if minimum is None or maximum is None or maximum < minimum:
+        return None
+
+    return minimum, maximum
+
+
+def get_vendor_price(row, guests=None):
+    """
+    Return the estimated total-cost range for the requested guest count.
+
+    Explicit per-plate/per-event columns take priority. Generic min_price and
+    max_price are used only when pricing_type clearly identifies their basis.
+    For pricing_type='both', an explicit per-event range is preferred;
+    otherwise an explicit per-plate range is used.
+    """
+    pricing_type = clean_text(row.get("pricing_type")).replace("-", "_").replace(" ", "_")
+
+    per_plate = (
+        _get_range(row, "min_price_per_plate", "max_price_per_plate")
+        or (_get_range(row, "min_price", "max_price")
+            if pricing_type in {"per_plate", "both"} else None)
+    )
+
+    per_event = (
+        _get_range(row, "min_price_per_event", "max_price_per_event")
+        or (_get_range(row, "min_price", "max_price")
+            if pricing_type == "per_event" else None)
+    )
+
+    if pricing_type == "per_plate":
+        chosen_range = per_plate
+        if chosen_range is None or guests is None:
             return None
+        return chosen_range[0] * guests, chosen_range[1] * guests
 
-        return number
+    if pricing_type == "per_event":
+        return per_event
 
-    except (ValueError, TypeError):
+    if pricing_type == "both":
+        # Prefer event pricing because it is already a total-event amount.
+        if per_event is not None:
+            return per_event
+        if per_plate is not None and guests is not None:
+            return per_plate[0] * guests, per_plate[1] * guests
         return None
 
+    # If the pricing model is unknown, do not guess how the price is charged.
+    if _get_range(row, "min_price_per_event", "max_price_per_event") is not None:
+        return _get_range(row, "min_price_per_event", "max_price_per_event")
 
-def get_vendor_price(row):
-
-    min_price = get_numeric_price(row.get("min_price"))
-    max_price = get_numeric_price(row.get("max_price"))
-
-    if min_price is not None and max_price is not None:
-        return min_price, max_price
-
-    min_event = get_numeric_price(row.get("min_price_per_event"))
-    max_event = get_numeric_price(row.get("max_price_per_event"))
-
-    if min_event is not None and max_event is not None:
-        return min_event, max_event
-
-    return None, None
-
-
-def calculate_budget_score(row, budget):
-
-    if budget is None:
-        return None
-
-    minimum, maximum = get_vendor_price(row)
-
-    if minimum is None or maximum is None:
-        return None
-
-    if budget < minimum:
-        return 0
-
-    if budget >= maximum:
-        return 100
-
-    if maximum == minimum:
-        return 100
-
-    return ((budget - minimum) / (maximum - minimum)) * 100
-
-
-# ============================================================
-# RATING SCORING
-# ============================================================
-
-def get_vendor_rating(row):
-
-    possible_columns = [
-        "verified_rating",
-        "rating_listed",
-        "rating"
-    ]
-
-    for column in possible_columns:
-        if column in row.index:
-            value = get_numeric_price(row[column])
-
-            if value is not None and 0 <= value <= 5:
-                return value
+    if (
+        _get_range(row, "min_price_per_plate", "max_price_per_plate") is not None
+        and guests is not None
+    ):
+        low, high = _get_range(row, "min_price_per_plate", "max_price_per_plate")
+        return low * guests, high * guests
 
     return None
 
 
-def calculate_rating_score(row):
-
-    rating = get_vendor_rating(row)
-
-    if rating is None:
+def calculate_budget_score(row, budget, guests=None):
+    if budget is None:
         return None
 
-    return (rating / 5) * 100
+    price_range = get_vendor_price(row, guests)
+    if price_range is None:
+        return None
+
+    minimum, maximum = price_range
+
+    if budget < minimum:
+        return 0.0
+    if budget >= maximum:
+        return 100.0
+    if maximum == minimum:
+        return 100.0
+
+    return ((budget - minimum) / (maximum - minimum)) * 100.0
 
 
-# ============================================================
-# LOCATION SCORING
-# ============================================================
+def get_vendor_rating(row):
+    # Listed/public ratings are not described as independently verified.
+    for column in ["verified_rating", "rating_listed", "rating"]:
+        if column not in row.index:
+            continue
+        value = get_numeric_price(row[column])
+        if value is not None and 0 <= value <= 5:
+            return value
+    return None
+
+
+def calculate_rating_score(row):
+    rating = get_vendor_rating(row)
+    return None if rating is None else (rating / 5.0) * 100.0
+
 
 def calculate_location_score(row, selected_location):
-
     vendor_location = normalize_location(row.get("location"))
-
-    if vendor_location == selected_location:
-        return 100
-
-    return 0
+    requested_location = normalize_location(selected_location)
+    return 100.0 if vendor_location == requested_location else 0.0
 
 
-# ============================================================
-# FINAL SCORE
-# ============================================================
-
-def calculate_final_score(row, budget, selected_location, selected_event):
+def calculate_final_score(row, customer):
+    guests = customer.get("guests")
+    budget_score = calculate_budget_score(row, customer.get("budget"), guests)
+    location_score = calculate_location_score(row, customer["location"])
+    rating_score = calculate_rating_score(row)
+    relevance_score = calculate_relevance_score(row, customer["event"])
 
     scores = {
-        "budget": calculate_budget_score(row, budget),
-        "location": calculate_location_score(row, selected_location),
-        "rating": calculate_rating_score(row),
-        "relevance": calculate_relevance_score(row, selected_event)
+        "budget": budget_score,
+        "location": location_score,
+        "rating": rating_score,
+        "relevance": relevance_score,
     }
 
-    available_weight = 0
-    weighted_score = 0
-
-    for name, score in scores.items():
-
-        if score is None:
-            continue
-
-        weight = WEIGHTS[name]
-
-        weighted_score += score * weight
-        available_weight += weight
-
+    available_weight = sum(
+        WEIGHTS[key] for key, value in scores.items() if value is not None
+    )
     if available_weight == 0:
-        return 0
+        return 0.0
 
-    # Redistribute weights when budget or rating is unavailable
-    final_score = weighted_score / available_weight
+    total = sum(
+        value * WEIGHTS[key]
+        for key, value in scores.items()
+        if value is not None
+    )
+    return round(total / available_weight, 2)
 
-    return round(final_score, 2)
-
-
-# ============================================================
-# FILTERING
-# ============================================================
 
 def filter_category(df, category):
-
-    if df.empty:
-        return df
-
-    return df[
-        df["main_category"].astype(str).str.strip().str.lower()
-        == category.lower()
-    ].copy()
+    normalized = normalize_category(category)
+    if not normalized:
+        return df.iloc[0:0].copy()
+    return df[df["normalized_category"] == normalized].copy()
 
 
 def filter_location(df, location):
-
-    if df.empty:
-        return df
-
-    return df[
-        df["location"].apply(normalize_location) == location
-    ].copy()
+    normalized = normalize_location(location)
+    return df[df["normalized_location"] == normalized].copy()
 
 
 def filter_event(df, event):
+    return df[
+        df.apply(lambda row: calculate_relevance_score(row, event) > 0, axis=1)
+    ].copy()
 
-    if df.empty:
-        return df
-
-    mask = df.apply(
-        lambda row: calculate_relevance_score(row, event) > 0,
-        axis=1
-    )
-
-    return df[mask].copy()
-
-
-# ============================================================
-# RESEARCH / DEMO MODE
-# ============================================================
 
 def prepare_demo_results(df, customer):
-
-    if df.empty:
-        return df
-
     results = df.copy()
-
     results["recommendation_score"] = results.apply(
-        lambda row: calculate_final_score(
-            row,
-            customer["budget"],
-            customer["location"],
-            customer["event"]
-        ),
-        axis=1
+        lambda row: calculate_final_score(row, customer), axis=1
     )
+    results["recommendation_status"] = "Research lead - verify before booking"
+    return results.sort_values("recommendation_score", ascending=False)
 
-    results["recommendation_status"] = (
-        "Research lead - verify before booking"
-    )
-
-    results = results.sort_values(
-        by="recommendation_score",
-        ascending=False
-    )
-
-    return results
-
-
-# ============================================================
-# VERIFIED MODE
-# ============================================================
 
 def prepare_verified_results(df, customer):
-
-    if df.empty:
-        return df
-
     results = df.copy()
 
-    # Only vendors explicitly marked Available are considered
-    if "availability" in results.columns:
+    if "availability" not in results.columns:
+        return results.iloc[0:0].copy()
 
-        results = results[
-            results["availability"].astype(str).str.strip().str.lower()
-            == "available"
-        ].copy()
+    results = results[
+        results["availability"].apply(clean_text) == "available"
+    ].copy()
 
-    else:
-        return pd.DataFrame()
-
-    if results.empty:
-        return results
-
-    # Verified pricing is required
+    # Verified mode requires a usable price range for this guest count.
     results = results[
         results.apply(
-            lambda row: get_vendor_price(row)[0] is not None
-            and get_vendor_price(row)[1] is not None,
-            axis=1
+            lambda row: get_vendor_price(row, customer.get("guests")) is not None,
+            axis=1,
         )
     ].copy()
 
-    if results.empty:
-        return results
-
-    # Apply budget filter only when the customer entered a budget
-    if customer["budget"] is not None:
-
+    budget = customer.get("budget")
+    if budget is not None:
         results = results[
             results.apply(
-                lambda row: get_vendor_price(row)[0] <= customer["budget"],
-                axis=1
+                lambda row: get_vendor_price(row, customer.get("guests"))[0] <= budget,
+                axis=1,
             )
         ].copy()
 
-    if results.empty:
-        return results
+    if "guest_capacity" not in results.columns:
+        return results.iloc[0:0].copy()
 
-    # Guest capacity must be known and sufficient
-    if "guest_capacity" in results.columns:
-
-        results["guest_capacity_numeric"] = pd.to_numeric(
-            results["guest_capacity"],
-            errors="coerce"
-        )
-
-        results = results[
-            results["guest_capacity_numeric"].notna()
-            & (
-                results["guest_capacity_numeric"]
-                >= customer["guests"]
-            )
-        ].copy()
-
-    else:
-        return pd.DataFrame()
-
-    if results.empty:
-        return results
+    results["_capacity"] = pd.to_numeric(
+        results["guest_capacity"], errors="coerce"
+    )
+    results = results[
+        results["_capacity"].notna()
+        & (results["_capacity"] >= int(customer["guests"]))
+    ].copy()
+    results.drop(columns=["_capacity"], inplace=True)
 
     results["recommendation_score"] = results.apply(
-        lambda row: calculate_final_score(
-            row,
-            customer["budget"],
-            customer["location"],
-            customer["event"]
-        ),
-        axis=1
+        lambda row: calculate_final_score(row, customer), axis=1
     )
-
     results["recommendation_status"] = "Verified criteria matched"
-
-    results = results.sort_values(
-        by="recommendation_score",
-        ascending=False
-    )
-
-    return results
+    return results.sort_values("recommendation_score", ascending=False)
 
 
-# ============================================================
-# DISPLAY RESULTS
-# ============================================================
-
-def display_results(results, mode):
-
-    print("\n========== RECOMMENDATION RESULTS ==========\n")
-
+def display_results(results, customer):
     if results.empty:
-        print("No matching vendors found.")
+        print("\nNo vendors match all the selected criteria.")
+        print("Try another event, location, category, or mode.")
         return
 
-    for index, (_, row) in enumerate(results.iterrows(), start=1):
+    print(f"\nFound {len(results)} matching vendor(s):\n")
 
-        print(f"\n{index}. {row.get('vendor_name', 'Unknown Vendor')}")
-
-        print("Vendor ID:", row.get("vendor_id", "Not available"))
-        print("Category:", row.get("main_category", "Not available"))
-        print("Location:", row.get("location", "Not available"))
-
-        minimum, maximum = get_vendor_price(row)
-
-        if minimum is not None and maximum is not None:
-            print(f"Price range: ₹{minimum:,.0f} - ₹{maximum:,.0f}")
-        else:
-            print("Price: Not confirmed")
-
+    for rank, (_, row) in enumerate(results.iterrows(), start=1):
+        price_range = get_vendor_price(row, customer.get("guests"))
         rating = get_vendor_rating(row)
 
-        if rating is not None:
-            print("Rating:", rating, "/ 5")
+        print(f"{rank}. {row.get('vendor_name', 'Unknown vendor')}")
+        print(f"   Category: {row.get('main_category', 'Not listed')}")
+        print(f"   Location: {row.get('location', 'Not listed')}")
+
+        if price_range is None:
+            print("   Estimated total price: Not confirmed")
         else:
-            print("Rating: Not verified")
-
-        print(
-            "Availability:",
-            row.get("availability", "Unconfirmed")
-        )
-
-        print(
-            "Recommendation score:",
-            row.get("recommendation_score", 0),
-            "/ 100"
-        )
-
-        print(
-            "Status:",
-            row.get(
-                "recommendation_status",
-                "Research lead - verify before booking"
+            print(
+                f"   Estimated total price: ₹{price_range[0]:,.0f}"
+                f" - ₹{price_range[1]:,.0f}"
             )
-        )
 
-        print("-" * 50)
+        print(f"   Listed rating: {rating}/5" if rating is not None
+              else "   Rating: Not confirmed")
+        print(f"   Availability: {row.get('availability', 'Unconfirmed')}")
+        print(f"   Score: {row.get('recommendation_score', 0)}")
+        print(f"   Status: {row.get('recommendation_status', '')}\n")
 
-    if mode == "2":
-        print(
-            "\nNote: These are research/demo recommendations. "
-            "Vendor pricing, availability, ratings and capacity "
-            "must be confirmed before booking."
-        )
-
-
-# ============================================================
-# DATASET STATUS
-# ============================================================
 
 def show_dataset_status(df):
-
-    print("\n========== DATASET STATUS ==========\n")
-
-    print("Total vendors:", len(df))
-
-    if df.empty:
-        return
+    print("\n--- Dataset Status ---")
+    print(f"Total vendors: {len(df)}")
 
     if "availability" in df.columns:
-        print("\nAvailability status:")
-        print(df["availability"].value_counts(dropna=False).to_string())
+        print("Availability counts:")
+        print(df["availability"].fillna("Missing").value_counts().to_string())
 
-    if "pricing_type" in df.columns:
-        print("\nPricing type:")
-        print(df["pricing_type"].value_counts(dropna=False).to_string())
+    for column in ["min_price", "max_price", "guest_capacity", "rating_listed"]:
+        if column in df.columns:
+            missing = df[column].isna().sum()
+            print(f"{column} missing: {missing}/{len(df)}")
 
-    if "guest_capacity" in df.columns:
-        missing_capacity = df["guest_capacity"].isna().sum()
-        print("\nMissing guest capacity:", missing_capacity)
-
-    if "verified_rating" in df.columns:
-        missing_rating = df["verified_rating"].isna().sum()
-        print("Missing verified ratings:", missing_rating)
-
-
-# ============================================================
-# MAIN PROGRAM
-# ============================================================
 
 def main():
+    try:
+        vendors = load_vendors()
+        show_dataset_status(vendors)
+        customer = get_customer_input()
 
-    df = load_vendors()
+        category = normalize_category(customer["category"])
+        event = normalize_event(customer["event"])
+        if not category:
+            print("Invalid category. Please enter one of the listed categories.")
+            return
+        if not event:
+            print("Invalid event type. Please enter one of the listed event types.")
+            return
+        if customer["guests"] <= 0:
+            print("Guest count must be greater than zero.")
+            return
+        if customer["budget"] is not None and customer["budget"] <= 0:
+            print("Budget must be greater than zero.")
+            return
+        if customer["mode"] not in {"research", "verified"}:
+            print("Mode must be research or verified.")
+            return
 
-    if df.empty:
-        print("No vendor data available.")
-        return
+        customer["category"] = category
+        customer["event"] = event
+        customer["location"] = normalize_location(customer["location"])
 
-    show_dataset_status(df)
+        filtered = filter_category(vendors, category)
+        filtered = filter_location(filtered, customer["location"])
+        # Event filtering is now applied in the main recommendation flow.
+        filtered = filter_event(filtered, event)
 
-    customer = get_customer_input()
+        if customer["mode"] == "verified":
+            results = prepare_verified_results(filtered, customer)
+        else:
+            results = prepare_demo_results(filtered, customer)
 
-    print("\n========== FILTERING VENDORS ==========")
+        display_results(results, customer)
 
-    category_df = filter_category(
-        df,
-        customer["category"]
-    )
+    except Exception as error:
+        print(f"Error: {error}")
 
-    print("After category filter:", len(category_df))
-
-    location_df = filter_location(
-        category_df,
-        customer["location"]
-    )
-
-    print("After location filter:", len(location_df))
-
-    if location_df.empty:
-        print(
-            "\nNo vendors found for this category and location."
-        )
-        return
-
-    if customer["mode"] == "1":
-
-        print("\nRunning VERIFIED recommendation mode...")
-
-        results = prepare_verified_results(
-            location_df,
-            customer
-        )
-
-    else:
-
-        print("\nRunning RESEARCH/DEMO recommendation mode...")
-
-        results = prepare_demo_results(
-            location_df,
-            customer
-        )
-
-    display_results(
-        results,
-        customer["mode"]
-    )
-
-
-# ============================================================
-# RUN
-# ============================================================
 
 if __name__ == "__main__":
     main()
